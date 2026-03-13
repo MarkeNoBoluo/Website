@@ -77,11 +77,13 @@
 - `init_db.py` (初始化脚本，创建 comments/todos 表结构)
 - `app/templates/base.html` (基础模板骨架)
 
-**Plans:** 4 plans
+**Plans:** 6 plans
 - [ ] 02-01-PLAN.md — Application factory, configuration, database connection, base templates (AUTH-01, AUTH-02)
 - [ ] 02-02-PLAN.md — Flask-Bcrypt installation, auth blueprint, password utilities (AUTH-01, AUTH-02)
 - [ ] 02-03-PLAN.md — Login/logout routes, templates, login_required decorator (AUTH-01, AUTH-02)
 - [ ] 02-04-PLAN.md — Integration testing and verification checkpoint (AUTH-01, AUTH-02)
+- [ ] 02-05-PLAN.md — User management web interface (AUTH-01, AUTH-02)
+- [ ] 02-06-PLAN.md — Security enhancements and audit logging (AUTH-01, AUTH-02)
 
 **Dependencies:** Phase 1 (部署管线必须就绪)
 
@@ -164,3 +166,4 @@
 *Roadmap created: 2026-03-12*
 *Updated: 2026-03-13 (added Phase 1 plans)*
 *Updated: 2026-03-13 (added Phase 2 plans)*
+*Updated: 2026-03-14 (added Phase 2 plans 05-06)*
