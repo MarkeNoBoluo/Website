@@ -14,6 +14,10 @@ def test_app_starts_with_all_env_vars():
     os.environ['DEBUG'] = 'false'
     os.environ['LOG_LEVEL'] = 'INFO'
 
+    # Clear module cache to force re-import
+    if 'app' in sys.modules:
+        del sys.modules['app']
+
     # Import app - should not raise any errors
     try:
         from app import app
@@ -33,6 +37,10 @@ def test_app_fails_with_missing_secret_key():
     os.environ['DATABASE_URL'] = 'sqlite:///test.db'
     os.environ['DEBUG'] = 'false'
     os.environ['LOG_LEVEL'] = 'INFO'
+
+    # Clear module cache to force re-import
+    if 'app' in sys.modules:
+        del sys.modules['app']
 
     # Import should raise RuntimeError with clear message
     with pytest.raises(RuntimeError) as exc_info:
@@ -55,6 +63,10 @@ def test_root_route_returns_hello_world():
     os.environ['DEBUG'] = 'false'
     os.environ['LOG_LEVEL'] = 'INFO'
 
+    # Clear module cache to force re-import
+    if 'app' in sys.modules:
+        del sys.modules['app']
+
     try:
         from app import app
 
@@ -76,6 +88,10 @@ def test_debug_mode_disabled_when_debug_false():
     os.environ['DEBUG'] = 'false'
     os.environ['LOG_LEVEL'] = 'INFO'
 
+    # Clear module cache to force re-import
+    if 'app' in sys.modules:
+        del sys.modules['app']
+
     try:
         from app import app
         assert app.config['DEBUG'] is False
@@ -91,6 +107,10 @@ def test_debug_mode_enabled_when_debug_true():
     os.environ['DATABASE_URL'] = 'sqlite:///test.db'
     os.environ['DEBUG'] = 'true'
     os.environ['LOG_LEVEL'] = 'INFO'
+
+    # Clear module cache to force re-import
+    if 'app' in sys.modules:
+        del sys.modules['app']
 
     try:
         from app import app
@@ -111,24 +131,25 @@ def test_config_loaded_from_dotenv():
         env_file = f.name
 
     try:
-        # Mock dotenv loading to use our temp file
-        with patch('app.load_dotenv') as mock_load_dotenv:
-            # Make load_dotenv actually load our test file
-            def side_effect():
-                from dotenv import load_dotenv as real_load_dotenv
-                real_load_dotenv(env_file)
-            mock_load_dotenv.side_effect = side_effect
+        # Instead of mocking, temporarily set the env vars from our file
+        # Clear any existing env vars first
+        for key in ['SECRET_KEY', 'DATABASE_URL', 'DEBUG', 'LOG_LEVEL']:
+            os.environ.pop(key, None)
 
-            # Clear any existing env vars
-            for key in ['SECRET_KEY', 'DATABASE_URL', 'DEBUG', 'LOG_LEVEL']:
-                os.environ.pop(key, None)
+        # Load the temp file directly
+        from dotenv import load_dotenv
+        load_dotenv(env_file)
 
-            # Import should load from .env file
-            from app import app
+        # Clear module cache to force re-import
+        if 'app' in sys.modules:
+            del sys.modules['app']
 
-            # Verify values from .env file
-            assert app.config['SECRET_KEY'] == 'dotenv-test-key-1234567890-dotenv-test-key-1234567890-extra-chars'
-            assert app.config['DEBUG'] is True
+        # Import should load from .env file
+        from app import app
+
+        # Verify values from .env file
+        assert app.config['SECRET_KEY'] == 'dotenv-test-key-1234567890-dotenv-test-key-1234567890-extra-chars'
+        assert app.config['DEBUG'] is True
     finally:
         # Clean up
         os.unlink(env_file)
@@ -142,6 +163,10 @@ def test_health_check_route():
     os.environ['DATABASE_URL'] = 'sqlite:///test.db'
     os.environ['DEBUG'] = 'false'
     os.environ['LOG_LEVEL'] = 'INFO'
+
+    # Clear module cache to force re-import
+    if 'app' in sys.modules:
+        del sys.modules['app']
 
     try:
         from app import app
@@ -163,6 +188,10 @@ def test_config_test_route():
     os.environ['DATABASE_URL'] = 'sqlite:///test.db'
     os.environ['DEBUG'] = 'false'
     os.environ['LOG_LEVEL'] = 'INFO'
+
+    # Clear module cache to force re-import
+    if 'app' in sys.modules:
+        del sys.modules['app']
 
     try:
         from app import app
