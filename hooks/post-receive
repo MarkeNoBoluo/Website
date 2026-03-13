@@ -1,0 +1,64 @@
+#!/bin/bash
+set -e
+
+# Git post-receive hook for automated deployment of Flask blog to Raspberry Pi
+# Executes deployment script with change detection and conditional operations
+
+# Configuration
+APP_DIR="/home/wddkxg/blog"
+DEPLOY_SCRIPT="$APP_DIR/deploy.sh"
+LOG_DIR="$APP_DIR/logs"
+HOOK_LOG="$LOG_DIR/post-receive.log"
+
+# Ensure log directory exists
+mkdir -p "$LOG_DIR"
+
+# Redirect all output to log file
+exec 1>>"$HOOK_LOG" 2>&1
+
+echo "=== $(date '+%Y-%m-%d %H:%M:%S') Post-receive hook started ==="
+
+# Read stdin for git push information
+while read oldrev newrev refname; do
+    echo "Ref update: $refname (old: $oldrev, new: $newrev)"
+
+    # Only deploy on push to develop branch
+    if [[ $refname = "refs/heads/develop" ]]; then
+        echo "Deploying develop branch to Raspberry Pi"
+
+        # Create temporary directory for checked-out code
+        TEMP_DIR=$(mktemp -d /tmp/deploy-XXXXXX)
+        echo "Created temp directory: $TEMP_DIR"
+
+        # Checkout the new code
+        git archive "$newrev" | tar -x -C "$TEMP_DIR"
+        echo "Checked out revision $newrev to $TEMP_DIR"
+
+        # Run deployment script with revision information
+        if [ -x "$DEPLOY_SCRIPT" ]; then
+            echo "Executing deployment script: $DEPLOY_SCRIPT"
+            cd "$APP_DIR"
+            "$DEPLOY_SCRIPT" "$TEMP_DIR" "$oldrev" "$newrev"
+            DEPLOY_EXIT=$?
+
+            if [ $DEPLOY_EXIT -eq 0 ]; then
+                echo "Deployment completed successfully"
+            else
+                echo "ERROR: Deployment failed with exit code $DEPLOY_EXIT"
+                # Continue anyway (non-critical errors logged but don't block)
+            fi
+        else
+            echo "ERROR: Deployment script not found or not executable: $DEPLOY_SCRIPT"
+            echo "Please ensure deploy.sh exists in $APP_DIR and is executable"
+        fi
+
+        # Cleanup temporary directory
+        rm -rf "$TEMP_DIR"
+        echo "Cleaned up temp directory"
+    else
+        echo "Skipping deployment for ref $refname (only develop branch deploys)"
+    fi
+done
+
+echo "=== $(date '+%Y-%m-%d %H:%M:%S') Post-receive hook completed ==="
+echo ""  # Blank line for separation

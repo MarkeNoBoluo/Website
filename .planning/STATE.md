@@ -44,8 +44,8 @@
 - **Wave 5:** 01-05 — Git deployment automation (INFRA-05)
 - **Wave 6:** 01-06 — Verification checkpoint (all INFRA requirements)
 
-**Execution Progress:** Plan 01-03 complete, 2 of 6 plans executed
-**Current Plan:** 01-04 (next)
+**Execution Progress:** Plan 01-05 complete, 4 of 6 plans executed
+**Current Plan:** 01-06 (next)
 **To Start:** Continue with `/gsd:execute-phase 01-infrastructure-foundation`
 
 ## Requirements Coverage
@@ -55,8 +55,8 @@
 | INFRA-01 | Phase 1 | Planned |
 | INFRA-02 | Phase 1 | ✅ Complete |
 | INFRA-03 | Phase 1 | ✅ Complete |
-| INFRA-04 | Phase 1 | Planned |
-| INFRA-05 | Phase 1 | Planned |
+| INFRA-04 | Phase 1 | ✅ Complete |
+| INFRA-05 | Phase 1 | ✅ Complete |
 | AUTH-01 | Phase 2 | Pending |
 | AUTH-02 | Phase 2 | Pending |
 | BLOG-01 | Phase 3 | Pending |
