@@ -21,11 +21,11 @@ StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=blog
 
-# Security hardening
-ProtectSystem=strict
-NoNewPrivileges=true
-PrivateTmp=false
-ProtectHome=read-only
+# Security hardening - temporarily relaxed for debugging
+#ProtectSystem=strict  # Temporarily disabled for debugging
+#NoNewPrivileges=true  # Temporarily disabled for debugging
+PrivateTmp=false  # Required for socket sharing with Nginx
+#ProtectHome=read-only  # Temporarily disabled for debugging
 
 # Allow writing to logs and temp directories
 ReadWritePaths=/home/wddkxg/blog/logs /tmp
