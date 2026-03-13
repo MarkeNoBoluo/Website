@@ -11,7 +11,7 @@ Requirements for initial release.
 
 - [x] **INFRA-01**: 项目可通过 virtualenv + .env 在 RPi 上启动，secrets 不进 git
 - [x] **INFRA-02**: Flask 应用可通过 Gunicorn（2 workers, Unix socket）运行
-- [ ] **INFRA-03**: Nginx 作反向代理，静态文件直接由 Nginx 提供，动态请求转发 Gunicorn
+- [x] **INFRA-03**: Nginx 作反向代理，静态文件直接由 Nginx 提供，动态请求转发 Gunicorn
 - [ ] **INFRA-04**: 应用由 systemd 管理，开机自启，崩溃自动重启
 - [ ] **INFRA-05**: 开发者执行 `git push` 后，RPi 上代码自动更新并重启服务
 
@@ -82,7 +82,7 @@ Updated during roadmap creation.
 |-------------|-------|--------|
 | INFRA-01 | Phase 1 | Complete |
 | INFRA-02 | Phase 1 | Complete |
-| INFRA-03 | Phase 1 | Pending |
+| INFRA-03 | Phase 1 | Complete |
 | INFRA-04 | Phase 1 | Pending |
 | INFRA-05 | Phase 1 | Pending |
 | AUTH-01 | Phase 2 | Pending |

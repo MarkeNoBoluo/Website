@@ -32,9 +32,9 @@
 - `.env.example` (环境变量模板)
 
 **Plans:** 6 plans
-- [ ] 01-01-PLAN.md — Python foundation and Flask skeleton (INFRA-01)
-- [ ] 01-02-PLAN.md — Gunicorn production server configuration (INFRA-02)
-- [ ] 01-03-PLAN.md — Nginx reverse proxy configuration (INFRA-03)
+- [x] 01-01-PLAN.md — Python foundation and Flask skeleton (INFRA-01)
+- [x] 01-02-PLAN.md — Gunicorn production server configuration (INFRA-02)
+- [x] 01-03-PLAN.md — Nginx reverse proxy configuration (INFRA-03)
 - [ ] 01-04-PLAN.md — Systemd service management (INFRA-04)
 - [ ] 01-05-PLAN.md — Git deployment automation (INFRA-05)
 - [ ] 01-06-PLAN.md — Verification checkpoint (all INFRA requirements)
