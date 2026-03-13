@@ -11,7 +11,7 @@
 
 **Success Criteria** (observable user behaviors):
 1. 开发者执行 `git push origin develop`，RPi 上的代码自动更新，无手动复制步骤
-2. 访问 http://localhost 返回 Flask 的 “Hello, world!”（Nginx → Gunicorn → Flask 链通）
+2. 访问 http://localhost 返回 Flask 的 "Hello, world!"（Nginx → Gunicorn → Flask 链通）
 3. 重启树莓派后 Flask 应用自动启动（systemd 服务生效）
 4. 修改 `.env` 文件中的 `SECRET_KEY` 后，服务重启即生效（python-dotenv 正确加载）
 
@@ -31,6 +31,14 @@
 - `wsgi.py` (Gunicorn 入口)
 - `.env.example` (环境变量模板)
 
+**Plans:** 6 plans
+- [ ] 01-01-PLAN.md — Python foundation and Flask skeleton (INFRA-01)
+- [ ] 01-02-PLAN.md — Gunicorn production server configuration (INFRA-02)
+- [ ] 01-03-PLAN.md — Nginx reverse proxy configuration (INFRA-03)
+- [ ] 01-04-PLAN.md — Systemd service management (INFRA-04)
+- [ ] 01-05-PLAN.md — Git deployment automation (INFRA-05)
+- [ ] 01-06-PLAN.md — Verification checkpoint (all INFRA requirements)
+
 **Dependencies:** None — 这是第一个阶段。
 
 **Research Needed:** 无 — 基础设施模式高度标准化。
@@ -47,7 +55,7 @@
 **Success Criteria:**
 1. 访问 http://localhost/db-test 返回 SQLite 连接状态和 WAL 模式确认
 2. 重启服务后 `.env` 中的 `SECRET_KEY` 正确加载，Flask session 可用
-3. 并发两个请求访问不同端点，SQLite 无 “database is locked” 错误（WAL 模式生效）
+3. 并发两个请求访问不同端点，SQLite 无 "database is locked" 错误（WAL 模式生效）
 4. 应用工厂 `create_app()` 可正确初始化三个蓝图（blog, todo, auth）
 5. 访问 `/login` 显示登录表单，正确凭据可创建 session，错误凭据显示错误信息
 6. 访问 `/logout` 可销毁 session
@@ -142,9 +150,10 @@
 
 ## Next Steps
 
-1. **Execute Phase 1** (`/gsd:plan-phase 1`): 建立部署管线
+1. **Execute Phase 1** (`/gsd:execute-phase 01-infrastructure-foundation`): 建立部署管线
 2. **Verify** each phase's success criteria before proceeding
 3. **Commit** code at end of each phase
 
 ---
 *Roadmap created: 2026-03-12*
+*Updated: 2026-03-13 (added Phase 1 plans)*
