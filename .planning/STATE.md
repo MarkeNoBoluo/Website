@@ -45,20 +45,23 @@
 | INFRA-03 | Phase 1 | Pending |
 | INFRA-04 | Phase 1 | Pending |
 | INFRA-05 | Phase 1 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
 | BLOG-01 | Phase 3 | Pending |
 | BLOG-02 | Phase 3 | Pending |
 | BLOG-03 | Phase 3 | Pending |
 | BLOG-04 | Phase 3 | Pending |
 | BLOG-05 | Phase 3 | Pending |
 
-**Coverage:** 100% (10/10 v1 requirements mapped)
+**Coverage:** 100% (12/12 v1 requirements mapped)
 
 ## Notes
 
 - **Research completed:** 4 dimensions (stack, features, architecture, pitfalls)
 - **Stack decided:** Flask 3.1.3 + mistune 3.2.0 + SQLite + Gunicorn + Nginx + systemd
 - **Key pitfalls identified:** XSS via `| safe`, SQLite locking, SD card wear, post‑receive hook silent failures
-- **v1 scope narrowed:** No comments, no frp/ngrok, no auth/todo in v1 (deferred to v2)
+- **v1 scope narrowed:** No comments, no frp/ngrok, no todo in v1 (deferred to v2)
+- **Auth added to v1:** Password-based authentication implemented in Phase 2
 - **v1.x enhancements:** RSS, sitemap, Open Graph meta tags (post‑v1)
 
 ## Decisions Log

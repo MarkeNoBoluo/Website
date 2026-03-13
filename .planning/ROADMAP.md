@@ -42,15 +42,18 @@
 
 ### Phase 2: Flask Application Skeleton
 
-**Goal:** 建立 Flask 应用骨架，包括配置加载、数据库连接（WAL 模式）和蓝图结构。
+**Goal:** 建立 Flask 应用骨架，包括配置加载、数据库连接（WAL 模式）、蓝图结构和用户认证功能。
 
 **Success Criteria:**
 1. 访问 http://localhost/db-test 返回 SQLite 连接状态和 WAL 模式确认
 2. 重启服务后 `.env` 中的 `SECRET_KEY` 正确加载，Flask session 可用
 3. 并发两个请求访问不同端点，SQLite 无 “database is locked” 错误（WAL 模式生效）
-4. 应用工厂 `create_app()` 可正确初始化三个蓝图（blog, todo, auth 占位）
+4. 应用工厂 `create_app()` 可正确初始化三个蓝图（blog, todo, auth）
+5. 访问 `/login` 显示登录表单，正确凭据可创建 session，错误凭据显示错误信息
+6. 访问 `/logout` 可销毁 session
+7. 受保护路由 (`@login_required`) 未登录时重定向到登录页
 
-**Requirements Covered:** (none directly — this phase is foundation for Phase 3)
+**Requirements Covered:** AUTH-01, AUTH-02 (authentication implementation)
 
 **Deliverables:**
 - `app/__init__.py` (`create_app()` 工厂)
@@ -58,7 +61,11 @@
 - `app/db.py` (SQLite 连接，WAL 模式，`synchronous=NORMAL`)
 - `app/blog/__init__.py` (blog 蓝图占位)
 - `app/todo/__init__.py` (todo 蓝图占位)
-- `app/auth/__init__.py` (auth 蓝图占位)
+- `app/auth/__init__.py` (auth 蓝图)
+- `app/auth/routes.py` (登录/注销路由，session 管理)
+- `app/auth/templates/auth/login.html` (登录表单模板)
+- `app/auth/templates/auth/logout.html` (注销确认模板)
+- `app/auth/utils.py` (密码哈希验证工具)
 - `init_db.py` (初始化脚本，创建 comments/todos 表结构)
 - `app/templates/base.html` (基础模板骨架)
 
@@ -118,18 +125,20 @@
 | INFRA-03 | Phase 1 | ✓ |
 | INFRA-04 | Phase 1 | ✓ |
 | INFRA-05 | Phase 1 | ✓ |
+| AUTH-01 | Phase 2 | ✓ |
+| AUTH-02 | Phase 2 | ✓ |
 | BLOG-01 | Phase 3 | ✓ |
 | BLOG-02 | Phase 3 | ✓ |
 | BLOG-03 | Phase 3 | ✓ |
 | BLOG-04 | Phase 3 | ✓ |
 | BLOG-05 | Phase 3 | ✓ |
 
-**Coverage:** 100% (10/10 v1 requirements mapped)
+**Coverage:** 100% (12/12 v1 requirements mapped)
 
 ## Out-of-Scope Items
 
 **v1.x (post‑v1):** RSS, Sitemap, Open Graph meta tags
-**v2:** Comments, frp/ngrok external access, Auth + Eisenhower Matrix todo
+**v2:** Comments, frp/ngrok external access, Eisenhower Matrix todo
 
 ## Next Steps
 

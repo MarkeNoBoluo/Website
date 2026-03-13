@@ -23,6 +23,11 @@ Requirements for initial release.
 - [ ] **BLOG-04**: 全站使用暗色技术风格视觉主题，布局在移动端和桌面端均可正常显示
 - [ ] **BLOG-05**: 访问不存在的 URL 显示自定义 404 页面
 
+### Authentication
+
+- [ ] **AUTH-01**: 博主可通过密码登录进入后台功能（session 认证，密码哈希存 .env）
+- [ ] **AUTH-02**: 未登录时无法访问后台路由（`@login_required` 保护）
+
 ## v1.x Requirements
 
 Deferred to immediately after v1 launch. Not in v1 roadmap.
@@ -50,8 +55,6 @@ Deferred to future release.
 
 ### Personal Productivity
 
-- **AUTH-01**: 博主可通过密码登录进入后台功能（session 认证，密码哈希存 .env）
-- **AUTH-02**: 未登录时无法访问后台路由（`@login_required` 保护）
 - **TODO-01**: 登录后可访问艾森豪威尔矩阵页面，任务分四象限展示（重要且紧急/重要不紧急/紧急不重要/不重要不紧急）
 - **TODO-02**: 用户可在任意象限新增任务
 - **TODO-03**: 用户可标记任务为完成
@@ -82,15 +85,17 @@ Updated during roadmap creation.
 | INFRA-03 | Phase 1 | Pending |
 | INFRA-04 | Phase 1 | Pending |
 | INFRA-05 | Phase 1 | Pending |
-| BLOG-01 | Phase 2 | Pending |
-| BLOG-02 | Phase 2 | Pending |
-| BLOG-03 | Phase 2 | Pending |
-| BLOG-04 | Phase 2 | Pending |
-| BLOG-05 | Phase 2 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| BLOG-01 | Phase 3 | Pending |
+| BLOG-02 | Phase 3 | Pending |
+| BLOG-03 | Phase 3 | Pending |
+| BLOG-04 | Phase 3 | Pending |
+| BLOG-05 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 10 total
-- Mapped to phases: 10
+- v1 requirements: 12 total
+- Mapped to phases: 12
 - Unmapped: 0 ✓
 
 ---
