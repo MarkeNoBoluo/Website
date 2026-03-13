@@ -1,0 +1,14 @@
+# Python dependencies for personal blog on Raspberry Pi 4B
+# Flask web framework with WSGI support
+flask==3.1.3
+
+# Gunicorn production WSGI server for Flask
+gunicorn==21.2.0
+
+# Environment variable loading from .env files
+python-dotenv==1.0.1
+
+# Note: Additional dependencies will be added in later phases:
+# - mistune==3.2.0 for Markdown rendering (Phase 3)
+# - pygments for syntax highlighting (Phase 3)
+# - SQLite3 is included in Python standard library
