@@ -46,7 +46,7 @@ def validate_nginx_config():
             all_passed = False
 
     # Check static file path
-    if 'alias /home/pi/blog/app/static/' in content:
+    if 'alias /home/wddkxg/blog/app/static/' in content:
         print("  [OK] Static file alias path correct")
     else:
         print("  [ERROR] Static file alias path incorrect")
@@ -81,7 +81,7 @@ def simulate_nginx_tests():
     print("\n=== Simulating Nginx Tests (Linux environment) ===")
     print("Note: Actual Nginx execution requires Linux/Raspberry Pi environment")
     print("\nTests that would be performed on Raspberry Pi:")
-    print("1. sudo nginx -t -c /home/pi/blog/nginx/blog.conf")
+    print("1. sudo nginx -t -c /home/wddkxg/blog/nginx/blog.conf")
     print("   - Should return 'syntax is ok' and 'test is successful'")
     print("\n2. Start Gunicorn with Unix socket:")
     print("   - gunicorn -c gunicorn.conf.py")
@@ -124,7 +124,7 @@ def main():
     print("[OK] Static file test passed")
     print("[INFO] Actual Nginx execution requires Linux/Raspberry Pi environment")
     print("[INFO] Socket permissions note: Nginx (www-data) needs access to /tmp/blog.sock")
-    print("      Solution: sudo usermod -a -G pi www-data then restart Nginx")
+    print("      Solution: sudo usermod -a -G wddkxg www-data then restart Nginx")
 
     return 0
 

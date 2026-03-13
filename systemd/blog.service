@@ -5,11 +5,11 @@ Requires=network.target
 
 [Service]
 Type=simple
-User=pi
-Group=pi
-WorkingDirectory=/home/pi/blog
-EnvironmentFile=/home/pi/blog/.env
-ExecStart=/home/pi/blog/.venv/bin/gunicorn -c gunicorn.conf.py
+User=wddkxg
+Group=wddkxg
+WorkingDirectory=/home/wddkxg/blog
+EnvironmentFile=/home/wddkxg/blog/.env
+ExecStart=/home/wddkxg/blog/.venv/bin/gunicorn -c gunicorn.conf.py
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 Restart=on-failure
@@ -24,11 +24,11 @@ SyslogIdentifier=blog
 # Security hardening
 ProtectSystem=strict
 NoNewPrivileges=true
-PrivateTmp=true
+PrivateTmp=false
 ProtectHome=read-only
 
 # Allow writing to logs and temp directories
-ReadWritePaths=/home/pi/blog/logs /tmp
+ReadWritePaths=/home/wddkxg/blog/logs /tmp
 
 [Install]
 WantedBy=multi-user.target
@@ -42,9 +42,9 @@ WantedBy=multi-user.target
 # 6. View logs: sudo journalctl -u blog.service -n 10
 #
 # Important notes:
-# - Service runs as 'pi' user with proper permissions
+# - Service runs as 'wddkxg' user with proper permissions
 # - Restarts only on failure (Restart=on-failure)
 # - Waits for network before starting (After=network.target)
-# - Environment variables loaded from /home/pi/blog/.env file
+# - Environment variables loaded from /home/wddkxg/blog/.env file
 # - Socket permissions: ensure Nginx (www-data) can access /tmp/blog.sock
-#   Run: sudo usermod -a -G pi www-data && sudo systemctl restart nginx
+#   Run: sudo usermod -a -G wddkxg www-data && sudo systemctl restart nginx

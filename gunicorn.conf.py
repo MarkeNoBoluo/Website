@@ -14,8 +14,8 @@ keepalive = 2
 
 # Process naming and user
 proc_name = 'blog'
-user = 'pi'  # Run as pi user per user decision
-group = 'pi'
+user = 'wddkxg'  # Run as wddkxg user per user decision
+group = 'wddkxg'
 
 # Logging configuration
 accesslog = 'logs/gunicorn_access.log'
@@ -30,8 +30,8 @@ preload_app = True  # Load application before forking workers
 
 # Socket permissions
 umask = 0o007  # Socket readable/writable by owner and group
-# Note: Nginx (www-data user) needs access - will be handled by adding www-data to pi group
+# Note: Nginx (www-data user) needs access - will be handled by adding www-data to wddkxg group
 
 # Application specification
 wsgi_app = 'wsgi:app'  # Import path for Gunicorn
-chdir = '/home/pi/blog'  # Working directory - adjust as needed for Raspberry Pi deployment
+chdir = '/home/wddkxg/blog'  # Working directory - adjust as needed for Raspberry Pi deployment
