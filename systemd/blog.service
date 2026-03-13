@@ -1,0 +1,50 @@
+[Unit]
+Description=Blog Flask Application
+After=network.target
+Requires=network.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/blog
+EnvironmentFile=/home/pi/blog/.env
+ExecStart=/home/pi/blog/.venv/bin/gunicorn -c gunicorn.conf.py
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=30
+
+# Logging configuration
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=blog
+
+# Security hardening
+ProtectSystem=strict
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=read-only
+
+# Allow writing to logs and temp directories
+ReadWritePaths=/home/pi/blog/logs /tmp
+
+[Install]
+WantedBy=multi-user.target
+
+# Deployment instructions:
+# 1. Copy to systemd: sudo cp systemd/blog.service /etc/systemd/system/
+# 2. Reload systemd: sudo systemctl daemon-reload
+# 3. Enable service: sudo systemctl enable blog.service
+# 4. Start service: sudo systemctl start blog.service
+# 5. Check status: sudo systemctl status blog.service
+# 6. View logs: sudo journalctl -u blog.service -n 10
+#
+# Important notes:
+# - Service runs as 'pi' user with proper permissions
+# - Restarts only on failure (Restart=on-failure)
+# - Waits for network before starting (After=network.target)
+# - Environment variables loaded from /home/pi/blog/.env file
+# - Socket permissions: ensure Nginx (www-data) can access /tmp/blog.sock
+#   Run: sudo usermod -a -G pi www-data && sudo systemctl restart nginx
