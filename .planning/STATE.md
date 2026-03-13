@@ -2,7 +2,7 @@
 
 **Project:** 个人博客网站 (Personal Blog on Raspberry Pi 4B)
 **Created:** 2026-03-12
-**Current Phase:** Phase 1 planning complete — ready for execution
+**Current Phase:** Phase 2 planning complete — ready for execution
 
 ## Status
 
@@ -11,10 +11,11 @@
 | Project definition | ✅ Complete | 2026-03-12 |
 | Research | ✅ Complete | 2026-03-12 |
 | Requirements | ✅ Complete | 2026-03-12 |
-| Roadmap | ✅ Complete | 2026-03-12 |
+| Roadmap | ✅ Complete | 2026-03-13 |
 | Phase 1 Planning | ✅ Complete | 2026-03-13 |
 | Phase 1 Execution | ✅ Complete | 2026-03-13 |
-| Phase 2 (Flask Skeleton) | ⏳ Pending | — |
+| Phase 2 (Flask Skeleton) Planning | ✅ Complete | 2026-03-13 |
+| Phase 2 (Flask Skeleton) Execution | ⏳ Pending | — |
 | Phase 3 (Blog Articles) | ⏳ Pending | — |
 
 ## Phase History
@@ -24,30 +25,32 @@
 | Planning | ✅ Complete | 2026-03-12 | 2026-03-12 |
 | Phase 1 Planning | ✅ Complete | 2026-03-13 | 2026-03-13 |
 | Phase 1 Execution | ✅ Complete | 2026-03-13 | 2026-03-13 |
+| Phase 2 Planning | ✅ Complete | 2026-03-13 | 2026-03-13 |
 
 ## Current Phase Details
 
-**Current phase:** Phase 1 — Infrastructure Foundation
+**Current phase:** Phase 2 — Flask Application Skeleton
 
-**Goal:** 建立完整的部署管线，使得 `git push` 能自动更新 RPi 上的 Flask 应用并通过 Nginx 服务。
+**Goal:** 建立 Flask 应用骨架，包括配置加载、数据库连接（WAL 模式）、蓝图结构和用户认证功能。
 
 **Success Criteria:**
-1. `git push origin develop` → RPi 代码自动更新
-2. http://localhost 返回 Flask "Hello, world!"（Nginx → Gunicorn → Flask 链通）
-3. 重启树莓派后 Flask 应用自动启动（systemd）
-4. `.env` 修改后服务重启即生效
+1. 访问 http://localhost/db-test 返回 SQLite 连接状态和 WAL 模式确认
+2. 重启服务后 `.env` 中的 `SECRET_KEY` 正确加载，Flask session 可用
+3. 并发两个请求访问不同端点，SQLite 无 "database is locked" 错误（WAL 模式生效）
+4. 应用工厂 `create_app()` 可正确初始化三个蓝图（blog, todo, auth）
+5. 访问 `/login` 显示登录表单，正确凭据可创建 session，错误凭据显示错误信息
+6. 访问 `/logout` 可销毁 session
+7. 受保护路由 (`@login_required`) 未登录时重定向到登录页
 
-**Plans created:** 6 plans in 6 waves
-- **Wave 1:** 01-01 — Python foundation and Flask skeleton (INFRA-01)
-- **Wave 2:** 01-02 — Gunicorn production server (INFRA-02)
-- **Wave 3:** 01-03 — Nginx reverse proxy (INFRA-03)
-- **Wave 4:** 01-04 — Systemd service management (INFRA-04)
-- **Wave 5:** 01-05 — Git deployment automation (INFRA-05)
-- **Wave 6:** 01-06 — Verification checkpoint (all INFRA requirements)
+**Plans created:** 4 plans in 4 waves
+- **Wave 1:** 02-01 — Application factory, configuration, database connection, base templates (AUTH-01, AUTH-02)
+- **Wave 2:** 02-02 — Flask-Bcrypt installation, auth blueprint, password utilities (AUTH-01, AUTH-02)
+- **Wave 3:** 02-03 — Login/logout routes, templates, login_required decorator (AUTH-01, AUTH-02)
+- **Wave 4:** 02-04 — Integration testing and verification checkpoint (AUTH-01, AUTH-02)
 
-**Execution Progress:** Plan 01-06 complete, 5 of 6 plans executed
-**Current Plan:** 01-06 (completed)
-**Next Phase:** Phase 2 (Flask Skeleton)
+**Execution Progress:** Phase 2 not yet started
+**Current Plan:** 02-01 (pending)
+**Next Phase:** Phase 3 (Blog Articles + Dark Theme) after Phase 2 completion
 
 ## Requirements Coverage
 
@@ -58,8 +61,8 @@
 | INFRA-03 | Phase 1 | ✅ Complete |
 | INFRA-04 | Phase 1 | ✅ Complete |
 | INFRA-05 | Phase 1 | ✅ Complete |
-| AUTH-01 | Phase 2 | Pending |
-| AUTH-02 | Phase 2 | Pending |
+| AUTH-01 | Phase 2 | Planned (pending execution) |
+| AUTH-02 | Phase 2 | Planned (pending execution) |
 | BLOG-01 | Phase 3 | Pending |
 | BLOG-02 | Phase 3 | Pending |
 | BLOG-03 | Phase 3 | Pending |
@@ -91,6 +94,7 @@
 | 2026-03-13 | Nginx static file caching | No caching headers for static files to simplify debugging during development phase |
 | 2026-03-13 | Gzip compression settings | Level 6 compression for text responses with 256 byte minimum length for optimal performance |
 | 2026-03-13 | Client request limits | 10MB max body size for security, 12s timeouts for request processing on Raspberry Pi |
+| 2026-03-13 | Phase 2 plans created | 4 plans covering authentication with application factory, WAL mode, Flask-Bcrypt, and blueprint structure |
 
 ## Configuration
 
@@ -105,10 +109,10 @@
 ## Session Info
 
 **Last session:** 2026-03-13
-**Stopped at:** Phase 1 completed (Infrastructure foundation verified)
-**Next action:** Start Phase 2 (Flask skeleton with authentication)
+**Stopped at:** Phase 2 planning complete (4 plans created)
+**Next action:** Execute Phase 2: `/gsd:execute-phase 02-flask-application-skeleton`
 
 ---
 
 *State file created: 2026-03-12*
-*Last updated: 2026-03-13 (Phase 1 execution complete - Plan 01-06 verified)*
+*Last updated: 2026-03-13 (Phase 2 planning complete - 4 plans created)*
