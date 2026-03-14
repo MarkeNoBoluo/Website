@@ -1,6 +1,6 @@
 """Flask application factory."""
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask, jsonify
 
 # Try to load environment variables from .env file
@@ -36,6 +36,18 @@ def create_app(config_class=Config):
 
     # Initialize extensions
     bcrypt.init_app(app)
+
+    # Configure session settings
+    # Session expires on browser close (per user decision)
+    app.config['SESSION_PERMANENT'] = False
+    # For local development - set to True in production with HTTPS
+    app.config['SESSION_COOKIE_SECURE'] = False
+    # Prevent JavaScript access to session cookie (security)
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    # Balance security and functionality for cross-site requests
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    # Fallback timeout if browser doesn't respect SESSION_PERMANENT
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
     # Register database teardown
     from .db import close_db

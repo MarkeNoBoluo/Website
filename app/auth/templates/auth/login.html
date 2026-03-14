@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h1>Login</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="flash error">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('auth.login') }}" class="login-form">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ username or '' }}"
+                   required autofocus {% if username %}class="has-value"{% endif %}>
+            {% if request.method == 'POST' and not username %}
+                <div class="field-error">Username is required</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            {% if request.method == 'POST' %}
+                <div class="field-error">Invalid username or password</div>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+    </form>
+
+    <div class="login-help">
+        <p>Don't have an account? Contact the administrator to create one.</p>
+    </div>
+</div>
+{% endblock %}

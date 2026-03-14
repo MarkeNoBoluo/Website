@@ -92,3 +92,28 @@ def verify_user(username, password):
         }
 
     return None
+
+
+def login_required(f):
+    """Decorator to require login for protected routes.
+
+    Checks if user_id is in session. If not, redirects to login page
+    with a flash message.
+
+    Args:
+        f: Function to decorate
+
+    Returns:
+        Decorated function
+    """
+    from functools import wraps
+    from flask import flash, redirect, url_for, session
+
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash('Please log in to access this page.', 'warning')
+            return redirect(url_for('auth.login'))
+        return f(*args, **kwargs)
+
+    return decorated_function
