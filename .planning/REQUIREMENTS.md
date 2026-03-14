@@ -25,8 +25,8 @@ Requirements for initial release.
 
 ### Authentication
 
-- [ ] **AUTH-01**: 博主可通过密码登录进入后台功能（session 认证，密码哈希存 .env）
-- [ ] **AUTH-02**: 未登录时无法访问后台路由（`@login_required` 保护）
+- [x] **AUTH-01**: 博主可通过密码登录进入后台功能（session 认证，密码哈希存 .env）
+- [x] **AUTH-02**: 未登录时无法访问后台路由（`@login_required` 保护）
 
 ## v1.x Requirements
 
@@ -85,8 +85,8 @@ Updated during roadmap creation.
 | INFRA-03 | Phase 1 | Complete |
 | INFRA-04 | Phase 1 | Pending |
 | INFRA-05 | Phase 1 | Pending |
-| AUTH-01 | Phase 2 | Pending |
-| AUTH-02 | Phase 2 | Pending |
+| AUTH-01 | Phase 2 | Complete |
+| AUTH-02 | Phase 2 | Complete |
 | BLOG-01 | Phase 3 | Pending |
 | BLOG-02 | Phase 3 | Pending |
 | BLOG-03 | Phase 3 | Pending |
