@@ -1,0 +1,87 @@
+"""Flask application factory."""
+import os
+from datetime import datetime
+from flask import Flask, jsonify
+
+# Try to load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv not installed, but that's OK if env vars are set via systemd
+    pass
+
+from .config import Config
+
+
+def create_app(config_class=Config):
+    """Create and configure Flask application.
+
+    Args:
+        config_class: Configuration class to use (defaults to Config)
+
+    Returns:
+        Flask application instance
+    """
+    # Create Flask application
+    app = Flask('blog')
+
+    # Load configuration
+    config_instance = config_class()
+    app.config.from_object(config_instance)
+
+    # Validate configuration
+    config_class.validate()
+
+    # Register database teardown
+    from .db import close_db
+    app.teardown_appcontext(close_db)
+
+    # Register blueprints
+    from .blog import bp as blog_bp
+    from .todo import bp as todo_bp
+    app.register_blueprint(blog_bp, url_prefix='/blog')
+    app.register_blueprint(todo_bp, url_prefix='/todo')
+
+    # Register routes
+    @app.route('/')
+    def index():
+        """Root endpoint returning a simple greeting."""
+        return 'Hello, world!'
+
+    @app.route('/health')
+    def health():
+        """Health check endpoint returning application status."""
+        return jsonify({
+            'status': 'ok',
+            'timestamp': datetime.utcnow().isoformat() + 'Z',
+            'service': 'blog',
+            'version': '1.0.0'
+        })
+
+    @app.route('/config-test')
+    def config_test():
+        """Configuration test endpoint showing loaded config (excluding secrets)."""
+        return jsonify({
+            'debug': app.config['DEBUG'],
+            'database_url': app.config['SQLALCHEMY_DATABASE_URI'],
+            'log_level': app.config['LOG_LEVEL'],
+            'config_source': 'Environment variables validated successfully'
+        })
+
+    @app.route('/db-test')
+    def db_test():
+        """Database test endpoint showing connection status and WAL mode."""
+        from .db import get_db
+        db = get_db()
+        cursor = db.execute("PRAGMA journal_mode;")
+        journal_mode = cursor.fetchone()[0]
+
+        return jsonify({
+            'status': 'connected',
+            'wal_mode': journal_mode == 'wal',
+            'database': app.config['DATABASE_PATH'],
+            'journal_mode': journal_mode
+        })
+
+    return app
