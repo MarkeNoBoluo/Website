@@ -26,10 +26,10 @@ def login():
         else:
             flash('Invalid username or password. Please try again.', 'error')
             # Re-render form with error
-            return render_template('auth/login.html', username=username)
+            return render_template('login.html', username=username)
 
     # GET request - render login form
-    return render_template('auth/login.html')
+    return render_template('login.html')
 
 
 @bp.route('/logout', methods=['GET', 'POST'])
@@ -46,7 +46,7 @@ def logout():
         return redirect(url_for('auth.login'))
 
     # GET request - render logout confirmation
-    return render_template('auth/logout.html')
+    return render_template('logout.html')
 
 
 @bp.route('/protected-test')

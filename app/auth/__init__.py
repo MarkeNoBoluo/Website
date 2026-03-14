@@ -9,5 +9,5 @@ from flask import Blueprint
 # Create authentication blueprint
 bp = Blueprint('auth', __name__, template_folder='templates/auth')
 
-# Import routes (will be created in later plans)
-# from . import routes
+# Import routes
+from . import routes
