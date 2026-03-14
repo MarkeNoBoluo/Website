@@ -12,6 +12,7 @@ except ImportError:
     pass
 
 from .config import Config
+from .extensions import bcrypt
 
 
 def create_app(config_class=Config):
@@ -32,6 +33,9 @@ def create_app(config_class=Config):
 
     # Validate configuration
     config_class.validate()
+
+    # Initialize extensions
+    bcrypt.init_app(app)
 
     # Register database teardown
     from .db import close_db
@@ -64,7 +68,7 @@ def create_app(config_class=Config):
         """Configuration test endpoint showing loaded config (excluding secrets)."""
         return jsonify({
             'debug': app.config['DEBUG'],
-            'database_url': app.config['SQLALCHEMY_DATABASE_URI'],
+            'database_url': app.config['DATABASE_URL'],
             'log_level': app.config['LOG_LEVEL'],
             'config_source': 'Environment variables validated successfully'
         })

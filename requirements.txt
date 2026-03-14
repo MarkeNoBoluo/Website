@@ -8,6 +8,9 @@ gunicorn==21.2.0
 # Environment variable loading from .env files
 python-dotenv==1.0.1
 
+# Flask-Bcrypt for password hashing (Phase 2)
+flask-bcrypt==1.0.1
+
 # Note: Additional dependencies will be added in later phases:
 # - mistune==3.2.0 for Markdown rendering (Phase 3)
 # - pygments for syntax highlighting (Phase 3)
