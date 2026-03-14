@@ -79,6 +79,29 @@ Example error messages:
 - `Error: SECRET_KEY must be at least 64 characters (got 0)`
 - `Error: DEBUG must be 'true' or 'false' (got 'yes')`
 
+## Authentication Configuration
+
+### Session Management
+- **Session expiration:** Sessions expire on browser close (`SESSION_PERMANENT = False`)
+- **Fallback timeout:** 30-minute timeout if browser doesn't respect session expiration
+- **Cookie security:** `SESSION_COOKIE_HTTPONLY = True` (prevents JavaScript access), `SESSION_COOKIE_SAMESITE = 'Lax'`
+
+### Password Hashing
+- **Library:** Flask-Bcrypt with work factor 12
+- **Password verification:** `verify_user(username, password)` function in `app/auth/utils.py`
+- **Admin user creation:** Run `python init_db.py --create-admin --username admin --password <secure-password>`
+
+### Protected Routes
+- **Decorator:** Use `@login_required` from `app.auth.utils` to protect routes
+- **Behavior:** Unauthenticated users are redirected to `/auth/login` with flash message
+- **Session check:** Decorator checks for `session['user_id']`
+
+### Manual Setup Steps
+1. **Create database:** `python init_db.py`
+2. **Create admin user:** `python init_db.py --create-admin --username admin --password <secure-password>`
+3. **Test authentication:** Visit `/auth/login` and use admin credentials
+4. **Verify protected routes:** Access `/auth/protected-test` (redirects when not logged in)
+
 ## Production Deployment
 
 ### Systemd Service Configuration
