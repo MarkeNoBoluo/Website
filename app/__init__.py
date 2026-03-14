@@ -44,8 +44,10 @@ def create_app(config_class=Config):
     # Register blueprints
     from .blog import bp as blog_bp
     from .todo import bp as todo_bp
+    from .auth import bp as auth_bp
     app.register_blueprint(blog_bp, url_prefix='/blog')
     app.register_blueprint(todo_bp, url_prefix='/todo')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     # Register routes
     @app.route('/')
