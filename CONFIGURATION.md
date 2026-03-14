@@ -20,7 +20,14 @@ This document describes how to configure the Flask blog application for developm
 
 4. **Run the application:**
    ```bash
-   python app.py
+   # Development with auto-reload:
+   flask run
+
+   # Or directly with Python:
+   python -m flask run
+
+   # Production with Gunicorn:
+   gunicorn --bind unix:/tmp/blog.sock wsgi:app
    ```
 
 ## Environment Variables
