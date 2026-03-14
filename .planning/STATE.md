@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: Phase 2 planning complete — ready for execution
+current_plan: 02-03 (pending)
+status: unknown
+stopped_at: Completed Phase 2 Plan 02 (Flask-Bcrypt, auth blueprint, password utilities)
+last_updated: "2026-03-14T01:50:15.063Z"
+progress:
+  total_phases: 3
+  completed_phases: 1
+  total_plans: 10
+  completed_plans: 9
+---
+
 # Project State
 
 **Project:** 个人博客网站 (Personal Blog on Raspberry Pi 4B)
@@ -50,8 +66,8 @@
 - **Wave 5:** 02-05 — User management web interface (AUTH-01, AUTH-02)
 - **Wave 6:** 02-06 — Security enhancements and audit logging (AUTH-01, AUTH-02)
 
-**Execution Progress:** Plan 02-01 complete (3/3 tasks)
-**Current Plan:** 02-02 (pending)
+**Execution Progress:** Plan 02-02 complete (2/2 tasks)
+**Current Plan:** 02-03 (pending)
 **Next Phase:** Phase 3 (Blog Articles + Dark Theme) after Phase 2 completion
 
 ## Requirements Coverage
@@ -63,8 +79,8 @@
 | INFRA-03 | Phase 1 | ✅ Complete |
 | INFRA-04 | Phase 1 | ✅ Complete |
 | INFRA-05 | Phase 1 | ✅ Complete |
-| AUTH-01 | Phase 2 | 🟡 In Progress (02-01 complete) |
-| AUTH-02 | Phase 2 | 🟡 In Progress (02-01 complete) |
+| AUTH-01 | Phase 2 | 🟡 In Progress (02-02 complete) |
+| AUTH-02 | Phase 2 | 🟡 In Progress (02-02 complete) |
 | BLOG-01 | Phase 3 | Pending |
 | BLOG-02 | Phase 3 | Pending |
 | BLOG-03 | Phase 3 | Pending |
@@ -99,6 +115,7 @@
 | 2026-03-13 | Phase 2 plans created | 4 plans covering authentication with application factory, WAL mode, Flask-Bcrypt, and blueprint structure |
 | 2026-03-14 | Phase 2 plans expanded | Added 2 additional plans (05-06) for user management and security enhancements |
 | 2026-03-14 | Application factory pattern | Converted monolithic app.py to application factory for better testability, configuration management, and blueprint support |
+| 2026-03-14 | Flask-Bcrypt with centralized extensions | Used Flask-Bcrypt for password hashing with work factor 12, created app/extensions.py for centralized extension management |
 
 ## Configuration
 
@@ -112,9 +129,9 @@
 
 ## Session Info
 
-**Last session:** 2026-03-14
-**Stopped at:** Completed Phase 2 Plan 01 (Application factory, configuration, database, templates)
-**Next action:** Execute Phase 2 Plan 02: `/gsd:execute-phase 02-flask-application-skeleton --plan 02`
+**Last session:** 2026-03-14T01:50:15.061Z
+**Stopped at:** Completed Phase 2 Plan 02 (Flask-Bcrypt, auth blueprint, password utilities)
+**Next action:** Execute Phase 2 Plan 03: `/gsd:execute-phase 02-flask-application-skeleton --plan 03`
 
 ---
 
