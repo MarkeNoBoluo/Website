@@ -21,7 +21,7 @@ Requirements for initial release.
 - [x] **BLOG-02**: 用户点击文章可查看详情，Markdown 内容完整渲染为 HTML
 - [x] **BLOG-03**: 代码块有语法高亮（Pygments，适配暗色主题）
 - [ ] **BLOG-04**: 全站使用暗色技术风格视觉主题，布局在移动端和桌面端均可正常显示
-- [ ] **BLOG-05**: 访问不存在的 URL 显示自定义 404 页面
+- [x] **BLOG-05**: 访问不存在的 URL 显示自定义 404 页面
 
 ### Authentication
 
@@ -91,7 +91,7 @@ Updated during roadmap creation.
 | BLOG-02 | Phase 3 | Complete |
 | BLOG-03 | Phase 3 | Complete |
 | BLOG-04 | Phase 3 | Pending |
-| BLOG-05 | Phase 3 | Pending |
+| BLOG-05 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 12 total
