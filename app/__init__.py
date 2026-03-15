@@ -102,4 +102,9 @@ def create_app(config_class=Config):
             'journal_mode': journal_mode
         })
 
+    # Context processor to make 'now' available in all templates
+    @app.context_processor
+    def inject_now():
+        return {'now': datetime.utcnow()}
+
     return app
