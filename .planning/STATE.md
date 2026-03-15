@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: Phase 2 execution partially complete
-current_plan: 02-04 (partial - manual verification pending)
-status: executing
-stopped_at: Partially completed Phase 2 Plan 04 (Integration testing and verification)
-last_updated: "2026-03-14T03:10:00.000Z"
+current_phase: Phase 3 context gathered
+current_plan: 03-00 (context gathering)
+status: ready_for_planning
+stopped_at: Phase 3 context gathering complete, ready for planning
+last_updated: "2026-03-15T12:00:00.000Z"
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 10
   completed_plans: 9
 ---
@@ -18,7 +18,7 @@ progress:
 
 **Project:** 个人博客网站 (Personal Blog on Raspberry Pi 4B)
 **Created:** 2026-03-12
-**Current Phase:** Phase 2 planning complete — ready for execution
+**Current Phase:** Phase 3 context gathered — ready for planning
 
 ## Status
 
@@ -31,8 +31,8 @@ progress:
 | Phase 1 Planning | ✅ Complete | 2026-03-13 |
 | Phase 1 Execution | ✅ Complete | 2026-03-13 |
 | Phase 2 (Flask Skeleton) Planning | ✅ Complete | 2026-03-14 |
-| Phase 2 (Flask Skeleton) Execution | 🟡 In Progress | 2026-03-14 |
-| Phase 3 (Blog Articles) | ⏳ Pending | — |
+| Phase 2 (Flask Skeleton) Execution | ✅ Complete (core functionality) | 2026-03-15 |
+| Phase 3 (Blog Articles) | ✅ Context gathered | 2026-03-15 |
 
 ## Phase History
 
@@ -45,30 +45,21 @@ progress:
 
 ## Current Phase Details
 
-**Current phase:** Phase 2 — Flask Application Skeleton
+**Current phase:** Phase 3 — Blog Articles + Dark Theme
 
-**Goal:** 建立 Flask 应用骨架，包括配置加载、数据库连接（WAL 模式）、蓝图结构和用户认证功能。
+**Goal:** 实现博客核心功能 — 文章列表、详情页、Markdown 渲染、语法高亮、暗色主题、404 页面。
 
 **Success Criteria:**
-1. 访问 http://localhost/db-test 返回 SQLite 连接状态和 WAL 模式确认
-2. 重启服务后 `.env` 中的 `SECRET_KEY` 正确加载，Flask session 可用
-3. 并发两个请求访问不同端点，SQLite 无 "database is locked" 错误（WAL 模式生效）
-4. 应用工厂 `create_app()` 可正确初始化三个蓝图（blog, todo, auth）
-5. 访问 `/login` 显示登录表单，正确凭据可创建 session，错误凭据显示错误信息
-6. 访问 `/logout` 可销毁 session
-7. 受保护路由 (`@login_required`) 未登录时重定向到登录页
+1. 访问 http://localhost/ 显示文章列表，按修改时间倒序排列
+2. 点击文章标题进入详情页，Markdown 内容渲染为 HTML，代码块有语法高亮
+3. 全站使用暗色技术风格 CSS，移动端和桌面端布局正常
+4. 访问不存在的 URL 显示自定义 404 页面，而非 Nginx 默认错误页
+5. 新文章（`.md` 文件）推送到 RPi 后，自动出现在首页，无需重启服务（文件系统扫描生效）
 
-**Plans created:** 4 core plans + 2 backlog plans
-- **Wave 1:** 02-01 — Application factory, configuration, database connection, base templates (AUTH-01, AUTH-02) ✅
-- **Wave 2:** 02-02 — Flask-Bcrypt installation, auth blueprint, password utilities (AUTH-01, AUTH-02) ✅
-- **Wave 3:** 02-03 — Login/logout routes, templates, login_required decorator (AUTH-01, AUTH-02) ✅
-- **Wave 4:** 02-04 — Integration testing and verification checkpoint (AUTH-01, AUTH-02) ⏳
-- **Backlog:** 02-05 — User management web interface (AUTH-01, AUTH-02)
-- **Backlog:** 02-06 — Security enhancements and audit logging (AUTH-01, AUTH-02)
+**Plans created:** 0 (planning pending)
+**Context gathered:** ✅ Complete (03-CONTEXT.md created)
 
-**Execution Progress:** Plan 02-03 complete (2/2 tasks), Plan 02-04 tasks 1-2 complete, task 3 pending
-**Current Plan:** 02-04 (in progress - human verification pending)
-**Next Phase:** Phase 3 (Blog Articles + Dark Theme) after Phase 2 completion
+**Next Phase:** Phase 3 planning (`/gsd:plan-phase 03-blog-articles-dark-theme`)
 
 ## Requirements Coverage
 
@@ -79,13 +70,13 @@ progress:
 | INFRA-03 | Phase 1 | ✅ Complete |
 | INFRA-04 | Phase 1 | ✅ Complete |
 | INFRA-05 | Phase 1 | ✅ Complete |
-| AUTH-01 | Phase 2 | 🟡 In Progress (02-04 partial - manual verification pending) |
-| AUTH-02 | Phase 2 | 🟡 In Progress (02-04 partial - manual verification pending) |
-| BLOG-01 | Phase 3 | Pending |
-| BLOG-02 | Phase 3 | Pending |
-| BLOG-03 | Phase 3 | Pending |
-| BLOG-04 | Phase 3 | Pending |
-| BLOG-05 | Phase 3 | Pending |
+| AUTH-01 | Phase 2 | ✅ Complete (core functionality verified) |
+| AUTH-02 | Phase 2 | ✅ Complete (core functionality verified) |
+| BLOG-01 | Phase 3 | 🟡 Context gathered |
+| BLOG-02 | Phase 3 | 🟡 Context gathered |
+| BLOG-03 | Phase 3 | 🟡 Context gathered |
+| BLOG-04 | Phase 3 | 🟡 Context gathered |
+| BLOG-05 | Phase 3 | 🟡 Context gathered |
 
 **Coverage:** 100% (12/12 v1 requirements mapped)
 
@@ -116,6 +107,7 @@ progress:
 | 2026-03-14 | Phase 2 plans expanded | Added 2 additional plans (05-06) for user management and security enhancements |
 | 2026-03-14 | Application factory pattern | Converted monolithic app.py to application factory for better testability, configuration management, and blueprint support |
 | 2026-03-14 | Flask-Bcrypt with centralized extensions | Used Flask-Bcrypt for password hashing with work factor 12, created app/extensions.py for centralized extension management |
+| 2026-03-15 | Phase 3 context gathered | Article card layout, mistune+frontmatter, dark gray theme (#1a1a1a), flat file structure with YYYY-MM-DD-slug.md naming, 404 page with 3 random articles |
 
 ## Configuration
 
@@ -129,11 +121,11 @@ progress:
 
 ## Session Info
 
-**Last session:** 2026-03-14T01:50:15.061Z
-**Stopped at:** Completed Phase 2 Plan 02 (Flask-Bcrypt, auth blueprint, password utilities)
-**Next action:** Execute Phase 2 Plan 03: `/gsd:execute-phase 02-flask-application-skeleton --plan 03`
+**Last session:** 2026-03-15T12:00:00.000Z
+**Stopped at:** Phase 3 context gathering complete, ready for planning
+**Next action:** Plan Phase 3: `/gsd:plan-phase 03-blog-articles-dark-theme`
 
 ---
 
 *State file created: 2026-03-12*
-*Last updated: 2026-03-14 (Phase 2 planning expanded - 6 plans created)*
+*Last updated: 2026-03-15 (Phase 3 context gathered - ready for planning)*
