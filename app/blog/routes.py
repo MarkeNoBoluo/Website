@@ -9,7 +9,7 @@ import random
 def index():
     """文章列表页 - 显示所有文章卡片"""
     articles = get_all_articles()
-    return render_template('blog/index.html', articles=articles)
+    return render_template('index.html', articles=articles)
 
 
 @bp.route('/<slug>')
@@ -19,7 +19,7 @@ def article_detail(slug):
     if article is None:
         # 触发 404 错误，由错误处理器处理
         abort(404)
-    return render_template('blog/article.html', article=article)
+    return render_template('article.html', article=article)
 
 
 @bp.errorhandler(404)
@@ -32,5 +32,5 @@ def page_not_found(error):
     else:
         recommendations = []
 
-    return render_template('blog/404.html',
+    return render_template('404.html',
                          recommendations=recommendations), 404
