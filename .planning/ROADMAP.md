@@ -121,6 +121,11 @@
 - `posts/` 目录结构 + 示例文章
 - `app/templates/base.html` (扩展为完整布局)
 
+**Plans:** 3 plans
+- [x] 03-01-PLAN.md — Markdown processing infrastructure (BLOG-01, BLOG-02, BLOG-03)
+- [x] 03-02-PLAN.md — Blog routes and templates (BLOG-01, BLOG-02, BLOG-05)
+- [ ] 03-03-PLAN.md — Dark theme CSS implementation (BLOG-04)
+
 **Dependencies:** Phase 2 (Flask 骨架必须就绪)
 
 **Research Needed:** 无 — Markdown 解析和 Pygments 集成已研究。
@@ -165,3 +170,4 @@
 *Updated: 2026-03-13 (added Phase 1 plans)*
 *Updated: 2026-03-13 (added Phase 2 plans)*
 *Updated: 2026-03-14 (revised Phase 2 plans - reduced from 6 to 4 plans, moved user management and security enhancements to backlog)*
+*Updated: 2026-03-15 (added Phase 3 plans)*
