@@ -17,9 +17,9 @@ Requirements for initial release.
 
 ### Blog Content
 
-- [ ] **BLOG-01**: 用户访问首页可看到所有文章列表，按发布时间倒序排列，显示标题和日期
-- [ ] **BLOG-02**: 用户点击文章可查看详情，Markdown 内容完整渲染为 HTML
-- [ ] **BLOG-03**: 代码块有语法高亮（Pygments，适配暗色主题）
+- [x] **BLOG-01**: 用户访问首页可看到所有文章列表，按发布时间倒序排列，显示标题和日期
+- [x] **BLOG-02**: 用户点击文章可查看详情，Markdown 内容完整渲染为 HTML
+- [x] **BLOG-03**: 代码块有语法高亮（Pygments，适配暗色主题）
 - [ ] **BLOG-04**: 全站使用暗色技术风格视觉主题，布局在移动端和桌面端均可正常显示
 - [ ] **BLOG-05**: 访问不存在的 URL 显示自定义 404 页面
 
@@ -87,9 +87,9 @@ Updated during roadmap creation.
 | INFRA-05 | Phase 1 | Pending |
 | AUTH-01 | Phase 2 | Complete |
 | AUTH-02 | Phase 2 | Complete |
-| BLOG-01 | Phase 3 | Pending |
-| BLOG-02 | Phase 3 | Pending |
-| BLOG-03 | Phase 3 | Pending |
+| BLOG-01 | Phase 3 | Complete |
+| BLOG-02 | Phase 3 | Complete |
+| BLOG-03 | Phase 3 | Complete |
 | BLOG-04 | Phase 3 | Pending |
 | BLOG-05 | Phase 3 | Pending |
 
