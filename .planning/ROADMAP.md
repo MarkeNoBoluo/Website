@@ -124,7 +124,7 @@
 **Plans:** 3 plans
 - [x] 03-01-PLAN.md — Markdown processing infrastructure (BLOG-01, BLOG-02, BLOG-03)
 - [x] 03-02-PLAN.md — Blog routes and templates (BLOG-01, BLOG-02, BLOG-05)
-- [ ] 03-03-PLAN.md — Dark theme CSS implementation (BLOG-04)
+- [x] 03-03-PLAN.md — Dark theme CSS implementation (BLOG-04)
 
 **Dependencies:** Phase 2 (Flask 骨架必须就绪)
 
