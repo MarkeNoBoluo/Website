@@ -1,7 +1,7 @@
 """Flask application factory."""
 import os
 from datetime import datetime, timedelta
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 # Try to load environment variables from .env file
 try:
@@ -106,5 +106,17 @@ def create_app(config_class=Config):
     @app.context_processor
     def inject_now():
         return {'now': datetime.utcnow()}
+
+    @app.errorhandler(404)
+    def global_page_not_found(error):
+        """全局 404 错误处理"""
+        # 检查是否是博客相关的 URL
+        from flask import request
+        if request.path.startswith('/blog/'):
+            # 让博客蓝图处理
+            return error
+
+        # 对于非博客 URL，返回简单 404
+        return render_template('errors/404.html'), 404
 
     return app

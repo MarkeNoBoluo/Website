@@ -6,6 +6,9 @@ bp = Blueprint('blog', __name__, template_folder='templates/blog')
 # Import utilities (makes blog.utils available)
 from . import utils
 
+# Import routes to register them with the blueprint
+from . import routes
+
 
 @bp.route('/test-scan')
 def test_scan():
