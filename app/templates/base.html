@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Blog{% endblock %}</title>
-    <!-- Dark theme CSS link (placeholder for Phase 3) -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <!-- Dark theme CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pygments.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
