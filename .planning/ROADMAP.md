@@ -121,7 +121,7 @@
 - `posts/` 目录结构 + 示例文章
 - `app/templates/base.html` (扩展为完整布局)
 
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 - [x] 03-01-PLAN.md — Markdown processing infrastructure (BLOG-01, BLOG-02, BLOG-03)
 - [x] 03-02-PLAN.md — Blog routes and templates (BLOG-01, BLOG-02, BLOG-05)
 - [x] 03-03-PLAN.md — Dark theme CSS implementation (BLOG-04)
