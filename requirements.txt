@@ -11,7 +11,9 @@ python-dotenv==1.0.1
 # Flask-Bcrypt for password hashing (Phase 2)
 flask-bcrypt==1.0.1
 
-# Note: Additional dependencies will be added in later phases:
-# - mistune==3.2.0 for Markdown rendering (Phase 3)
-# - pygments for syntax highlighting (Phase 3)
-# - SQLite3 is included in Python standard library
+# Markdown rendering and syntax highlighting (Phase 3)
+mistune==3.2.0
+python-frontmatter==1.1.0
+Pygments==2.18.0
+
+# SQLite3 is included in Python standard library
