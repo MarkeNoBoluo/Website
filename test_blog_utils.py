@@ -16,8 +16,8 @@ def test_get_all_articles():
         assert 'date' in article
         assert 'slug' in article
         assert 'excerpt' in article
-        assert 'content' in article
-        assert 'html' in article
+        assert 'content' in article  # Rendered HTML
+        assert 'raw_content' in article  # Raw markdown
 
 
 def test_get_article_by_slug():
@@ -30,7 +30,7 @@ def test_get_article_by_slug():
     # Should have excerpt extracted
     assert article['excerpt']
     # Should have HTML content
-    assert article['html']
+    assert article['content']
 
 
 def test_get_article_by_slug_nonexistent():

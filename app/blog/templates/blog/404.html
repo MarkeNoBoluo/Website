@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - Blog{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <div class="error-content">
+        <h1>404</h1>
+        <h2>Page Not Found</h2>
+
+        <p class="error-message">
+            The page you're looking for doesn't exist or has been moved.
+        </p>
+
+        <div class="error-actions">
+            <a href="{{ url_for('blog.index') }}" class="btn btn-primary">
+                Back to Blog
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                Go Home
+            </a>
+        </div>
+
+        {% if recommendations %}
+        <div class="recommendations">
+            <h3>You might like these articles:</h3>
+            <div class="recommendation-list">
+                {% for article in recommendations %}
+                <div class="recommendation-item">
+                    <h4>
+                        <a href="{{ url_for('blog.article_detail', slug=article.slug) }}">
+                            {{ article.title }}
+                        </a>
+                    </h4>
+                    <p class="recommendation-excerpt">
+                        {{ article.excerpt|default('') }}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.error-page {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.error-content h1 {
+    font-size: 6rem;
+    margin: 0;
+    color: #64b5f6;
+    font-weight: 300;
+}
+
+.error-content h2 {
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: #cccccc;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: #64b5f6;
+    color: #000000;
+}
+
+.btn-primary:hover {
+    background: #42a5f5;
+}
+
+.btn-secondary {
+    background: #444;
+    color: #ffffff;
+    border: 1px solid #666;
+}
+
+.btn-secondary:hover {
+    background: #555;
+}
+
+.recommendations {
+    text-align: left;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #444;
+}
+
+.recommendations h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+}
+
+.recommendation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.recommendation-item {
+    background: #2a2a2a;
+    padding: 1.25rem;
+    border-radius: 8px;
+}
+
+.recommendation-item h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.recommendation-item h4 a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.recommendation-item h4 a:hover {
+    color: #64b5f6;
+}
+
+.recommendation-excerpt {
+    color: #aaaaaa;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+</style>
+{% endblock %}

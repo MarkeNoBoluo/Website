@@ -88,8 +88,8 @@ def parse_article_file(filepath: Path) -> Optional[Dict]:
             'date': date_obj,
             'slug': slug,
             'excerpt': excerpt,
-            'content': post.content,
-            'html': html_content,
+            'content': html_content,  # Rendered HTML (per plan specification)
+            'raw_content': post.content,  # Raw markdown for internal use
             'filepath': str(filepath),
         }
     except Exception as e:
