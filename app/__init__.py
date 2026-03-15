@@ -102,6 +102,11 @@ def create_app(config_class=Config):
             'journal_mode': journal_mode
         })
 
+    @app.route('/test-template')
+    def test_template():
+        """Test template rendering."""
+        return render_template('test.html')
+
     # Context processor to make 'now' available in all templates
     @app.context_processor
     def inject_now():

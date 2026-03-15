@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <h1>500 - Server Error</h1>
+
+    {% if config.DEBUG %}
+        <div class="error-details">
+            <h2>Error Details (DEBUG mode):</h2>
+            <pre>{{ error }}</pre>
+        </div>
+    {% else %}
+        <div class="error-message">
+            <p>Something went wrong on our server. Please try again later.</p>
+            <p>If the problem persists, please contact the administrator.</p>
+        </div>
+    {% endif %}
+
+    <div class="error-actions">
+        <a href="{{ url_for('index') }}" class="btn">Go to Homepage</a>
+        <a href="javascript:history.back()" class="btn">Go Back</a>
+    </div>
+</div>
+{% endblock %}
