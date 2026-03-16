@@ -135,6 +135,46 @@
 - 前端 CSS 在旧浏览器兼容性（使用现代 CSS 特性，如 CSS Grid/Flexbox）
 - 移动端响应式细节需手动测试
 
+### Phase 4: 实现 Cloudflare 隧道内网穿透
+
+**Goal:** 通过 Cloudflare Tunnel 将运行在树莓派上的 Flask 博客网站通过域名公开访问，无需公网 IP 和端口转发。
+
+**Success Criteria:**
+1. 用户可通过 `https://blog.example.com` 从公网访问博客
+2. 健康状态可通过 `https://status.example.com/health` 监控
+3. 隧道服务在系统重启后自动恢复连接
+4. 修改隧道配置后，部署脚本自动应用更改并重启服务
+5. 隧道凭证和敏感信息安全管理，不提交到 git
+
+**Requirements Covered:**
+- EXTC-01: 站点通过 frp 或 ngrok 内网穿透，可从公网访问
+- EXTC-02: 穿透服务由 systemd 管理，重启后自动恢复隧道连接
+
+**Deliverables:**
+- `cloudflared/config.yml` (隧道配置文件模板)
+- `systemd/cloudflared.service` (隧道 systemd 服务文件)
+- `cloudflared/setup.sh` (首次部署设置脚本)
+- `cloudflared/backup.sh`, `cloudflared/restore.sh` (配置备份恢复脚本)
+- `cloudflared/dns-setup.sh` (DNS 记录自动化脚本)
+- 更新的 `deploy.sh` (支持隧道配置变更检测)
+- 更新的 `CONFIGURATION.md` (隧道环境变量文档)
+- `app/utils.py` 中的健康检查端点 `/health`
+
+**Plans:** 3 plans
+- [ ] 04-01-PLAN.md — Cloudflare Tunnel foundation: configuration templates, systemd service, documentation (EXTC-01, EXTC-02)
+- [ ] 04-02-PLAN.md — Deployment integration: enhanced deploy.sh, credential handling, backup/restore (EXTC-01, EXTC-02)
+- [ ] 04-03-PLAN.md — Health endpoint and verification: Flask health route, DNS setup, final checkpoint (EXTC-01, EXTC-02)
+
+**Dependencies:** Phase 3 (博客功能必须就绪)
+
+**Research Needed:** 已完成 — Cloudflare Tunnel 配置模式、系统集成、常见问题已研究。
+
+**Risks:**
+- 凭证文件权限问题导致连接失败
+- 服务启动顺序错误（隧道在博客服务之前启动）
+- DNS 传播延迟导致立即测试失败
+- 环境变量未正确设置导致配置模板替换失败
+
 ## Coverage Validation
 
 | Requirement | Phase | Covered |
@@ -151,13 +191,15 @@
 | BLOG-03 | Phase 3 | ✓ |
 | BLOG-04 | Phase 3 | ✓ |
 | BLOG-05 | Phase 3 | ✓ |
+| EXTC-01 | Phase 4 | ✓ |
+| EXTC-02 | Phase 4 | ✓ |
 
-**Coverage:** 100% (12/12 v1 requirements mapped)
+**Coverage:** 100% (14/14 v1 requirements mapped)
 
 ## Out-of-Scope Items
 
 **v1.x (post‑v1):** RSS, Sitemap, Open Graph meta tags
-**v2:** Comments, frp/ngrok external access, Eisenhower Matrix todo
+**v2:** Comments, Eisenhower Matrix todo
 
 ## Next Steps
 
@@ -171,3 +213,4 @@
 *Updated: 2026-03-13 (added Phase 2 plans)*
 *Updated: 2026-03-14 (revised Phase 2 plans - reduced from 6 to 4 plans, moved user management and security enhancements to backlog)*
 *Updated: 2026-03-15 (added Phase 3 plans)*
+*Updated: 2026-03-16 (added Phase 4 plans)*
