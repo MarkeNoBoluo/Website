@@ -41,7 +41,7 @@
     </main>
 
     <footer>
-        <p>&copy; {{ now.year }} Personal Blog</p>
+        <p>&copy; {{ now.year if now else '2026' }} Personal Blog</p>
     </footer>
 
     {% block extra_js %}{% endblock %}
