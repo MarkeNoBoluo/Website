@@ -43,6 +43,7 @@ check_changed_files() {
     local changed_nginx_config=false
     local changed_systemd_service=false
     local changed_static_files=false
+    local changed_cloudflared_config=false
 
     if [ -n "$OLD_REV" ] && [ -n "$NEW_REV" ]; then
         log "Checking changed files between $OLD_REV and $NEW_REV"
@@ -67,6 +68,9 @@ check_changed_files() {
                 app/static/*|static/*)
                     changed_static_files=true
                     ;;
+                cloudflared/*)
+                    changed_cloudflared_config=true
+                    ;;
             esac
         done
     else
@@ -75,6 +79,7 @@ check_changed_files() {
         changed_requirements=true
         changed_nginx_config=true
         changed_systemd_service=true
+        changed_cloudflared_config=true
     fi
 
     # Return as string (simple approach)
@@ -83,6 +88,7 @@ check_changed_files() {
     echo "NGINX:$changed_nginx_config"
     echo "SYSTEMD:$changed_systemd_service"
     echo "STATIC:$changed_static_files"
+    echo "CLOUDFLARED:$changed_cloudflared_config"
 }
 
 # Backup current deployment
@@ -147,6 +153,7 @@ perform_conditional_operations() {
     local changed_nginx_config=false
     local changed_systemd_service=false
     local changed_static_files=false
+    local changed_cloudflared_config=false
 
     # Parse change info
     while IFS= read -r line; do
@@ -169,6 +176,9 @@ perform_conditional_operations() {
             STATIC:*)
                 changed_static_files="${line#STATIC:}"
                 ;;
+            CLOUDFLARED:*)
+                changed_cloudflared_config="${line#CLOUDFLARED:}"
+                ;;
         esac
     done <<< "$change_info"
 
@@ -178,6 +188,7 @@ perform_conditional_operations() {
     log "  Nginx config: $changed_nginx_config"
     log "  Systemd service: $changed_systemd_service"
     log "  Static files: $changed_static_files"
+    log "  Cloudflared config: $changed_cloudflared_config"
 
     # 1. Install dependencies if requirements.txt changed
     if [ "$changed_requirements" = "true" ]; then
@@ -221,19 +232,104 @@ perform_conditional_operations() {
         }
     fi
 
-    # 5. If only static files changed, no restart needed
+    # 5. Sync and restart Cloudflare Tunnel if config changed
+    if [ "$changed_cloudflared_config" = "true" ]; then
+        log "Cloudflared configuration changed, updating tunnel configuration"
+
+        # Backup current cloudflared config
+        local backup_timestamp=$(date '+%Y%m%d_%H%M%S')
+        local cloudflared_backup_dir="$BACKUP_DIR/cloudflared_backup_$backup_timestamp"
+        mkdir -p "$cloudflared_backup_dir"
+
+        if [ -d "/home/pi/.cloudflared" ]; then
+            cp -r "/home/pi/.cloudflared/"* "$cloudflared_backup_dir/" 2>/dev/null || true
+            log "Backed up current cloudflared configuration to $cloudflared_backup_dir"
+        fi
+
+        # Sync new configuration
+        log "Syncing cloudflared configuration to /home/pi/.cloudflared/"
+        mkdir -p "/home/pi/.cloudflared"
+
+        # Copy config.yml if it exists
+        if [ -f "$APP_DIR/cloudflared/config.yml" ]; then
+            cp -f "$APP_DIR/cloudflared/config.yml" "/home/pi/.cloudflared/config.yml"
+            log "Updated config.yml"
+
+            # Set proper permissions
+            chown pi:pi "/home/pi/.cloudflared/config.yml" 2>/dev/null || true
+            chmod 644 "/home/pi/.cloudflared/config.yml" 2>/dev/null || true
+        else
+            log "WARNING: cloudflared/config.yml not found in project"
+        fi
+
+        # Restart cloudflared service if it exists
+        if systemctl list-unit-files | grep -q "^cloudflared.service"; then
+            log "Restarting cloudflared.service"
+            sudo systemctl restart cloudflared.service || {
+                log "WARNING: Failed to restart cloudflared.service"
+            }
+
+            # Check service status
+            sleep 2
+            log "Cloudflared service status:"
+            sudo systemctl status cloudflared.service --no-pager | head -5 || true
+        else
+            log "INFO: cloudflared.service not found, skipping restart"
+        fi
+    fi
+
+    # 6. If only static files changed, no restart needed
     if [ "$changed_static_files" = "true" ] && \
        [ "$changed_py_files" = "false" ] && \
        [ "$changed_requirements" = "false" ] && \
        [ "$changed_nginx_config" = "false" ] && \
-       [ "$changed_systemd_service" = "false" ]; then
+       [ "$changed_systemd_service" = "false" ] && \
+       [ "$changed_cloudflared_config" = "false" ]; then
         log "Only static files changed - no service restart required"
+    fi
+}
+
+# Check tunnel environment variables
+check_tunnel_env_vars() {
+    log "Checking Cloudflare Tunnel environment variables..."
+
+    local env_file="$APP_DIR/.env"
+    local missing_vars=()
+
+    # Check if .env file exists
+    if [ ! -f "$env_file" ]; then
+        log "WARNING: Environment file not found: $env_file"
+        log "Cloudflare Tunnel configuration may not work properly."
+        return 0
+    fi
+
+    # Required tunnel variables
+    local required_vars=("CLOUDFLARE_TUNNEL_ID" "DOMAIN" "BLOG_SUBDOMAIN" "STATUS_SUBDOMAIN")
+
+    for var in "${required_vars[@]}"; do
+        if ! grep -q "^$var=" "$env_file"; then
+            missing_vars+=("$var")
+        fi
+    done
+
+    if [ ${#missing_vars[@]} -gt 0 ]; then
+        log "WARNING: Missing Cloudflare Tunnel environment variables:"
+        for var in "${missing_vars[@]}"; do
+            log "  - $var"
+        done
+        log "Run cloudflared/setup.sh to configure tunnel variables."
+        log "Tunnel may not function correctly until these variables are set."
+    else
+        log "All required Cloudflare Tunnel environment variables are set."
     fi
 }
 
 # Main deployment function
 deploy_main() {
     log "Starting deployment process"
+
+    # Check tunnel environment variables
+    check_tunnel_env_vars
 
     # Get change information
     change_info=$(check_changed_files)
