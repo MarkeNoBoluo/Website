@@ -1,0 +1,31 @@
+# Cloudflare Tunnel configuration template
+# Environment variables will be injected at runtime
+# Placeholder values use ${VARIABLE} syntax
+
+tunnel: ${CLOUDFLARE_TUNNEL_ID}
+credentials-file: /home/pi/.cloudflared/${CLOUDFLARE_TUNNEL_ID}.json
+
+# Ingress rules define how traffic is routed
+ingress:
+  # Rule 1: Blog main site
+  - hostname: ${BLOG_SUBDOMAIN}.${DOMAIN}
+    service: http://localhost:8080
+
+  # Rule 2: Health check endpoint
+  - hostname: ${STATUS_SUBDOMAIN}.${DOMAIN}
+    service: http://localhost:8080/health
+
+  # Rule 3: Default fallback (404)
+  - service: http_status:404
+
+# Tunnel configuration
+originRequest:
+  connectTimeout: 30s
+  noTLSVerify: false
+
+# Logging configuration
+logDirectory: /home/pi/.cloudflared/logs
+loglevel: info
+
+# Metrics configuration (optional)
+metrics: 0.0.0.0:2000
