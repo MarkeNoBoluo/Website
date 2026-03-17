@@ -160,7 +160,7 @@
 - 更新的 `CONFIGURATION.md` (隧道环境变量文档)
 - `app/utils.py` 中的健康检查端点 `/health`
 
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 - [ ] 04-01-PLAN.md — Cloudflare Tunnel foundation: configuration templates, systemd service, documentation (EXTC-01, EXTC-02)
 - [ ] 04-02-PLAN.md — Deployment integration: enhanced deploy.sh, credential handling, backup/restore (EXTC-01, EXTC-02)
 - [ ] 04-03-PLAN.md — Health endpoint and verification: Flask health route, DNS setup, final checkpoint (EXTC-01, EXTC-02)

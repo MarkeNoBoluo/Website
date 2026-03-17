@@ -50,8 +50,8 @@ Deferred to future release.
 
 ### External Access
 
-- **EXTC-01**: 站点通过 frp 或 ngrok 内网穿透，可从公网访问
-- **EXTC-02**: 穿透服务由 systemd 管理，重启后自动恢复隧道连接
+- [x] **EXTC-01**: 站点通过 frp 或 ngrok 内网穿透，可从公网访问 (Implemented via Cloudflare Tunnel)
+- [x] **EXTC-02**: 穿透服务由 systemd 管理，重启后自动恢复隧道连接 (cloudflared.service with Restart=always)
 
 ### Personal Productivity
 
