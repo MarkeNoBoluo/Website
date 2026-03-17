@@ -12,7 +12,7 @@ except ImportError:
     pass
 
 from .config import Config
-from .extensions import bcrypt
+from .extensions import bcrypt, db, migrate, generate_csrf_token
 
 
 def create_app(config_class=Config):
@@ -36,6 +36,8 @@ def create_app(config_class=Config):
 
     # Initialize extensions
     bcrypt.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
 
     # Configure session settings
     # Session expires on browser close (per user decision)
@@ -49,9 +51,9 @@ def create_app(config_class=Config):
     # Fallback timeout if browser doesn't respect SESSION_PERMANENT
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
-    # Register database teardown
-    from .db import close_db
-    app.teardown_appcontext(close_db)
+    # Register database teardown (handled by SQLAlchemy)
+    # from .db import close_db
+    # app.teardown_appcontext(close_db)
 
     # Register blueprints
     from .blog import bp as blog_bp
@@ -70,12 +72,8 @@ def create_app(config_class=Config):
     @app.route('/health')
     def health():
         """Health check endpoint returning application status."""
-        return jsonify({
-            'status': 'ok',
-            'timestamp': datetime.utcnow().isoformat() + 'Z',
-            'service': 'blog',
-            'version': '1.0.0'
-        })
+        from .utils import health_check
+        return jsonify(health_check())
 
     @app.route('/config-test')
     def config_test():
@@ -90,10 +88,10 @@ def create_app(config_class=Config):
     @app.route('/db-test')
     def db_test():
         """Database test endpoint showing connection status and WAL mode."""
-        from .db import get_db
-        db = get_db()
-        cursor = db.execute("PRAGMA journal_mode;")
-        journal_mode = cursor.fetchone()[0]
+        # Use SQLAlchemy connection for WAL mode check
+        from .extensions import db
+        result = db.session.execute("PRAGMA journal_mode;")
+        journal_mode = result.fetchone()[0]
 
         return jsonify({
             'status': 'connected',
@@ -107,6 +105,11 @@ def create_app(config_class=Config):
     @app.context_processor
     def inject_now():
         return {'now': datetime.utcnow()}
+
+    # Context processor to make CSRF token available in all templates
+    @app.context_processor
+    def inject_csrf_token():
+        return {'csrf_token': generate_csrf_token()}
 
     @app.errorhandler(404)
     def global_page_not_found(error):
