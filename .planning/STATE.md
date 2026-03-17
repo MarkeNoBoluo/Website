@@ -94,7 +94,7 @@ progress:
 
 **Project:** 个人博客网站 (Personal Blog on Raspberry Pi 4B)
 **Created:** 2026-03-12
-**Current Phase:** 3
+**Current Phase:** 4
 
 ## Status
 
@@ -108,7 +108,8 @@ progress:
 | Phase 1 Execution | ✅ Complete | 2026-03-13 |
 | Phase 2 (Flask Skeleton) Planning | ✅ Complete | 2026-03-14 |
 | Phase 2 (Flask Skeleton) Execution | ✅ Complete (core functionality) | 2026-03-15 |
-| Phase 3 (Blog Articles) | 🟡 Plan 01 executing | 2026-03-15 |
+| Phase 3 (Blog Articles) | ✅ Complete | 2026-03-15 |
+| Phase 4 (Cloudflare Tunnel) | 🟡 Plan 02 executing | 2026-03-17 |
 
 ## Phase History
 
@@ -121,22 +122,22 @@ progress:
 
 ## Current Phase Details
 
-**Current phase:** Phase 3 — Blog Articles + Dark Theme
+**Current phase:** Phase 4 — Cloudflare Tunnel 内网穿透
 
-**Goal:** 实现博客核心功能 — 文章列表、详情页、Markdown 渲染、语法高亮、暗色主题、404 页面。
+**Goal:** 通过 Cloudflare Tunnel 将运行在树莓派上的 Flask 博客网站通过域名公开访问，无需公网 IP 和端口转发。
 
 **Success Criteria:**
-1. 访问 http://localhost/ 显示文章列表，按修改时间倒序排列
-2. 点击文章标题进入详情页，Markdown 内容渲染为 HTML，代码块有语法高亮
-3. 全站使用暗色技术风格 CSS，移动端和桌面端布局正常
-4. 访问不存在的 URL 显示自定义 404 页面，而非 Nginx 默认错误页
-5. 新文章（`.md` 文件）推送到 RPi 后，自动出现在首页，无需重启服务（文件系统扫描生效）
+1. 用户可通过 `https://blog.example.com` 从公网访问博客
+2. 健康状态可通过 `https://status.example.com/health` 监控
+3. 隧道服务在系统重启后自动恢复连接
+4. 修改隧道配置后，部署脚本自动应用更改并重启服务
+5. 隧道凭证和敏感信息安全管理，不提交到 git
 
-**Plans created:** 3 (03-01, 03-02, 03-03)
-**Plans executed:** 3 (03-01, 03-02, 03-03)
-**Context gathered:** ✅ Complete (03-CONTEXT.md created)
+**Plans created:** 3 (04-01, 04-02, 04-03)
+**Plans executed:** 2 (04-01, 04-02)
+**Context gathered:** ✅ Complete (04-CONTEXT.md created)
 
-**Next Phase:** Phase 3 completion verification
+**Next Phase:** Complete Phase 4 Plan 03 (Health endpoint and verification)
 
 ## Requirements Coverage
 
@@ -205,11 +206,11 @@ progress:
 
 ## Session Info
 
-**Last session:** 2026-03-17T00:18:44.547Z
-**Stopped at:** Completed 04-01-PLAN.md
-**Next action:** Plan Phase 3: `/gsd:plan-phase 03-blog-articles-dark-theme`
+**Last session:** 2026-03-17T00:26:39.000Z
+**Stopped at:** Completed 04-02-PLAN.md
+**Next action:** Execute Phase 4 Plan 03: `/gsd:execute-phase 04-03`
 
 ---
 
 *State file created: 2026-03-12*
-*Last updated: 2026-03-15 (Phase 3 context gathered - ready for planning)*
+*Last updated: 2026-03-17 (Phase 4 Plan 02 completed - ready for Plan 03)*
