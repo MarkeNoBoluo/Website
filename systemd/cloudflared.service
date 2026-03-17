@@ -1,0 +1,53 @@
+[Unit]
+Description=Cloudflare Tunnel for Flask Blog
+After=network.target
+Wants=network-online.target
+After=blog.service  # Ensure blog service starts first
+Requires=blog.service  # Require blog service to be active
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi
+EnvironmentFile=/home/pi/blog/.env  # Load environment variables
+ExecStart=/usr/local/bin/cloudflared tunnel --config /home/pi/.cloudflared/config.yml run
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+
+# Logging configuration
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=cloudflared
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+
+# Allow access to cloudflared config and credentials
+ReadWritePaths=/home/pi/.cloudflared
+ReadOnlyPaths=/home/pi/blog
+
+[Install]
+WantedBy=multi-user.target
+
+# Deployment instructions:
+# 1. Copy to systemd: sudo cp systemd/cloudflared.service /etc/systemd/system/
+# 2. Reload systemd: sudo systemctl daemon-reload
+# 3. Enable service: sudo systemctl enable cloudflared.service
+# 4. Start service: sudo systemctl start cloudflared.service
+# 5. Check status: sudo systemctl status cloudflared.service
+# 6. View logs: sudo journalctl -u cloudflared.service -n 10
+#
+# Important notes:
+# - Service runs as 'pi' user with proper permissions
+# - Depends on blog.service (starts after and requires it)
+# - Restarts always (Restart=always) for maximum uptime
+# - Environment variables loaded from /home/pi/blog/.env file
+# - Security options enabled: NoNewPrivileges, PrivateTmp, ProtectSystem
+# - Working directory set to /home/pi to avoid permission issues
