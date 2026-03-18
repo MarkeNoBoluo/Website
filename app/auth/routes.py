@@ -19,10 +19,11 @@ def login():
         user = verify_user(username, password)
         if user:
             # Create session
-            session['user_id'] = user['username']
+            session['user_id'] = user['id']
+            session['username'] = user['username']
             flash(f'Welcome back, {user["username"]}!', 'success')
-            # Redirect to home page after login
-            return redirect(url_for('index'))
+            # Redirect to todo matrix after login
+            return redirect(url_for('todo.index'))
         else:
             flash('Invalid username or password. Please try again.', 'error')
             # Re-render form with error
@@ -42,6 +43,7 @@ def logout():
     if request.method == 'POST':
         # Clear session
         session.pop('user_id', None)
+        session.pop('username', None)
         flash('You have been logged out.', 'info')
         return redirect(url_for('auth.login'))
 

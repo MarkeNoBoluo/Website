@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Eisenhower Matrix{% endblock %}
+
+{% block content %}
+<div class="todo-container">
+    <header class="todo-header">
+        <h1>Eisenhower Matrix</h1>
+        <p class="subtitle">Prioritize your tasks based on urgency and importance</p>
+        <a href="{{ url_for('todo.add') }}" class="btn btn-primary">Add New Task</a>
+    </header>
+
+    <div class="matrix-grid">
+        <!-- Quadrant 1: Important & Urgent -->
+        <div class="quadrant quadrant-1" data-quadrant="1">
+            <h2>Quadrant 1: Important & Urgent</h2>
+            <div class="quadrant-description">
+                <p>Crises, deadlines, problems</p>
+            </div>
+            <div class="tasks-list" id="quadrant-1-tasks">
+                {% for todo in quadrant_todos[1] %}
+                    {% include "todo/partials/task_card.html" %}
+                {% else %}
+                    <div class="empty-state">No tasks in this quadrant</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Quadrant 2: Important & Not Urgent -->
+        <div class="quadrant quadrant-2" data-quadrant="2">
+            <h2>Quadrant 2: Important & Not Urgent</h2>
+            <div class="quadrant-description">
+                <p>Planning, relationship building, prevention</p>
+            </div>
+            <div class="tasks-list" id="quadrant-2-tasks">
+                {% for todo in quadrant_todos[2] %}
+                    {% include "todo/partials/task_card.html" %}
+                {% else %}
+                    <div class="empty-state">No tasks in this quadrant</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Quadrant 3: Not Important & Urgent -->
+        <div class="quadrant quadrant-3" data-quadrant="3">
+            <h2>Quadrant 3: Not Important & Urgent</h2>
+            <div class="quadrant-description">
+                <p>Interruptions, some meetings, some mail</p>
+            </div>
+            <div class="tasks-list" id="quadrant-3-tasks">
+                {% for todo in quadrant_todos[3] %}
+                    {% include "todo/partials/task_card.html" %}
+                {% else %}
+                    <div class="empty-state">No tasks in this quadrant</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Quadrant 4: Not Important & Not Urgent -->
+        <div class="quadrant quadrant-4" data-quadrant="4">
+            <h2>Quadrant 4: Not Important & Not Urgent</h2>
+            <div class="quadrant-description">
+                <p>Time wasters, trivial activities</p>
+            </div>
+            <div class="tasks-list" id="quadrant-4-tasks">
+                {% for todo in quadrant_todos[4] %}
+                    {% include "todo/partials/task_card.html" %}
+                {% else %}
+                    <div class="empty-state">No tasks in this quadrant</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/todo.js') }}"></script>
+{% endblock %}

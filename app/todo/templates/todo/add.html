@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Task{% endblock %}
+
+{% block content %}
+<div class="todo-form-container">
+    <h1>Add New Task</h1>
+
+    {% if form_data %}
+        {% set title = form_data.get('title', '') %}
+        {% set description = form_data.get('description', '') %}
+        {% set quadrant = form_data.get('quadrant', '') %}
+        {% set priority = form_data.get('priority', '3') %}
+        {% set due_date = form_data.get('due_date', '') %}
+    {% else %}
+        {% set title = '' %}
+        {% set description = '' %}
+        {% set quadrant = '' %}
+        {% set priority = '3' %}
+        {% set due_date = '' %}
+    {% endif %}
+
+    <form method="post" class="todo-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" name="title" required
+                   placeholder="Enter task title" maxlength="200"
+                   value="{{ title }}">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description"
+                      placeholder="Optional description" rows="4">{{ description }}</textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="quadrant">Quadrant *</label>
+                <select id="quadrant" name="quadrant" required>
+                    <option value="">Select quadrant</option>
+                    <option value="1" {{ 'selected' if quadrant == '1' }}>Quadrant 1: Important & Urgent</option>
+                    <option value="2" {{ 'selected' if quadrant == '2' }}>Quadrant 2: Important & Not Urgent</option>
+                    <option value="3" {{ 'selected' if quadrant == '3' }}>Quadrant 3: Not Important & Urgent</option>
+                    <option value="4" {{ 'selected' if quadrant == '4' }}>Quadrant 4: Not Important & Not Urgent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority">
+                    <option value="1" {{ 'selected' if priority == '1' }}>1 - Highest</option>
+                    <option value="2" {{ 'selected' if priority == '2' }}>2 - High</option>
+                    <option value="3" {{ 'selected' if priority == '3' }}>3 - Medium</option>
+                    <option value="4" {{ 'selected' if priority == '4' }}>4 - Low</option>
+                    <option value="5" {{ 'selected' if priority == '5' }}>5 - Lowest</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="due_date">Due Date (Optional)</label>
+            <input type="date" id="due_date" name="due_date" value="{{ due_date }}">
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('todo.index') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Add Task</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

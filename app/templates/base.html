@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>{% block title %}Blog{% endblock %}</title>
     <!-- Dark theme CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pygments.css') }}">
+    {% if request.endpoint and request.endpoint.startswith('todo.') %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/todo.css') }}">
+    {% endif %}
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -16,7 +20,7 @@
             <li><a href="{{ url_for('blog.index') }}">Blog</a></li>
             <li><a href="{{ url_for('todo.index') }}">Todo</a></li>
             {% if session.get('user_id') %}
-                <li><span>Welcome, {{ session['user_id'] }}</span></li>
+                <li><span>Welcome, {{ session.get('username', 'User') }}</span></li>
                 <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('auth.login') }}">Login</a></li>

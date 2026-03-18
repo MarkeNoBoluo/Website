@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Task{% endblock %}
+
+{% block content %}
+<div class="todo-form-container">
+    <h1>Edit Task</h1>
+
+    <form method="post" class="todo-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" name="title" value="{{ todo.title }}" required
+                   placeholder="Enter task title" maxlength="200">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description"
+                      placeholder="Optional description" rows="4">{{ todo.description }}</textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="quadrant">Quadrant *</label>
+                <select id="quadrant" name="quadrant" required>
+                    <option value="1" {{ 'selected' if todo.quadrant == 1 }}>Quadrant 1: Important & Urgent</option>
+                    <option value="2" {{ 'selected' if todo.quadrant == 2 }}>Quadrant 2: Important & Not Urgent</option>
+                    <option value="3" {{ 'selected' if todo.quadrant == 3 }}>Quadrant 3: Not Important & Urgent</option>
+                    <option value="4" {{ 'selected' if todo.quadrant == 4 }}>Quadrant 4: Not Important & Not Urgent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority">
+                    <option value="1" {{ 'selected' if todo.priority == 1 }}>1 - Highest</option>
+                    <option value="2" {{ 'selected' if todo.priority == 2 }}>2 - High</option>
+                    <option value="3" {{ 'selected' if todo.priority == 3 }}>3 - Medium</option>
+                    <option value="4" {{ 'selected' if todo.priority == 4 }}>4 - Low</option>
+                    <option value="5" {{ 'selected' if todo.priority == 5 }}>5 - Lowest</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="due_date">Due Date (Optional)</label>
+            <input type="date" id="due_date" name="due_date"
+                   value="{{ todo.due_date.strftime('%Y-%m-%d') if todo.due_date else '' }}">
+        </div>
+
+        <div class="form-group">
+            <label class="checkbox-label">
+                <input type="checkbox" name="completed" {{ 'checked' if todo.completed }}>
+                Mark as completed
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('todo.index') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Task</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

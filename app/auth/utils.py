@@ -3,8 +3,8 @@
 Password hashing, user creation, and verification utilities.
 """
 
-from ..extensions import bcrypt
-from ..db import get_db
+from ..extensions import bcrypt, db
+from ..models import User
 
 
 def hash_password(password):
@@ -44,20 +44,20 @@ def create_user(username, password):
         User ID if successful, None if failed
 
     Raises:
-        sqlite3.Error: If database operation fails
+        sqlite3.IntegrityError: If username already exists
+        SQLAlchemyError: If database operation fails
     """
     # Hash the password
     password_hash = hash_password(password)
 
-    # Insert user into database
-    db = get_db()
-    cursor = db.execute(
-        'INSERT INTO users (username, password_hash) VALUES (?, ?)',
-        (username, password_hash)
-    )
-    db.commit()
+    # Create new user instance
+    user = User(username=username, password_hash=password_hash)
 
-    return cursor.lastrowid
+    # Add to session and commit
+    db.session.add(user)
+    db.session.commit()
+
+    return user.id
 
 
 def verify_user(username, password):
@@ -72,23 +72,18 @@ def verify_user(username, password):
         None otherwise
     """
     # Get user from database
-    db = get_db()
-    cursor = db.execute(
-        'SELECT id, username, password_hash, created_at FROM users WHERE username = ?',
-        (username,)
-    )
-    user_row = cursor.fetchone()
+    user = User.query.filter_by(username=username).first()
 
-    if not user_row:
+    if not user:
         return None
 
     # Check password
-    if check_password(user_row[2], password):
+    if check_password(user.password_hash, password):
         # Return user dictionary
         return {
-            'id': user_row[0],
-            'username': user_row[1],
-            'created_at': user_row[3]
+            'id': user.id,
+            'username': user.username,
+            'created_at': user.created_at
         }
 
     return None
