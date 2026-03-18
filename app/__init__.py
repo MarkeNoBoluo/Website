@@ -66,8 +66,10 @@ def create_app(config_class=Config):
     # Register routes
     @app.route('/')
     def index():
-        """Root endpoint returning a simple greeting."""
-        return 'Hello, world!'
+        """Homepage — terminal-themed blog landing page."""
+        from .blog.utils import get_all_articles
+        articles = get_all_articles()
+        return render_template('home.html', articles=articles)
 
     @app.route('/health')
     def health():
