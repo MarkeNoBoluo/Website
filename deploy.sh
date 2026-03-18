@@ -130,12 +130,17 @@ copy_new_code() {
     ls -la "$NEW_CODE_DIR/" 2>&1 | head -20 || true
 
     # Use rsync to copy files
+    # Exclude runtime files that live outside git: .env (secrets), logs/ (runtime),
+    # backups/ (history), .venv (virtualenv), __pycache__ (bytecode)
     rsync -a --delete \
         --exclude='.git' \
         --exclude='.venv' \
         --exclude='__pycache__' \
         --exclude='*.pyc' \
         --exclude='*.pyo' \
+        --exclude='.env' \
+        --exclude='logs/' \
+        --exclude='backups/' \
         "$NEW_CODE_DIR/" "$APP_DIR/" || {
         log "ERROR: Failed to copy new code"
         log "DEBUG: rsync failed with exit code $?"
