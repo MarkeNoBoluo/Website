@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 05-04 plan
-last_updated: "2026-03-21T00:02:00Z"
+stopped_at: Completed 05-02 plan
+last_updated: "2026-03-20T16:12:26Z"
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 20
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -21,18 +21,20 @@ progress:
 ## Current Position
 
 Phase: 05 (blog-management) — IN PROGRESS
-Plan: 2 of 4 (05-01 complete)
+Plan: 2 of 4 (05-01, 05-02 complete)
 
 ## Decisions Made
 
 - Login page includes admin.css for consistent dark theme styling
 - Flash messages show all categories (success, error, warning, info)
-- Admin templates created as placeholder structure for future admin blueprint
+- Admin templates created with markdown editor and live preview
 - Article model uses SQLAlchemy ORM with status field for draft/published workflow
 - Admin routes protected with @login_required and @csrf_protected decorators
 - Slug generation handles duplicates by appending incrementing suffix (-2, -3, etc.)
 - Blog routes read from database instead of file system
 - Migration script imports posts/ files to database and archives originals
+- Server-side markdown preview for consistent styling with blog articles
+- Debounced preview updates (300ms) to reduce server load
 
 ## Accumulated Context
 
@@ -60,8 +62,8 @@ Plan: 2 of 4 (05-01 complete)
 
 ## Session Continuity
 
-Last session: 2026-03-21
-Stopped at: Completed 05-01 plan (Article model, admin CRUD, migration script)
+Last session: 2026-03-20
+Stopped at: Completed 05-02 plan (Admin templates with markdown editor)
 Resume file: .planning/phases/05-blog-management/05-CONTEXT.md
 
 ---
