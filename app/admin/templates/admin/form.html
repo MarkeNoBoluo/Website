@@ -1,0 +1,124 @@
+{% extends "admin/base.html" %}
+
+{% block admin_title %}{{ 'Edit' if article else 'Create' }} Article{% endblock %}
+{% block admin_heading %}{{ 'Edit Article' if article else 'Create New Article' }}{% endblock %}
+
+{% block admin_content %}
+<form method="POST" action="{{ action }}" class="article-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" value="{{ article.title if article else '' }}" required autofocus>
+        {% if article and article.status == 'published' %}
+        <span class="status-indicator published">Published</span>
+        {% elif article %}
+        <span class="status-indicator draft">Draft</span>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="slug">Slug</label>
+        <input type="text" id="slug" name="slug" value="{{ article.slug if article else '' }}" required pattern="[a-z0-9-]+" title="Lowercase letters, numbers, and hyphens only">
+        <small style="color: var(--text-muted);">Lowercase letters, numbers, and hyphens only</small>
+    </div>
+
+    <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" value="{{ article.date.strftime('%Y-%m-%d') if article and article.date else '' }}" required>
+    </div>
+
+    <div class="editor-layout">
+        <div class="editor-pane">
+            <label for="content">Content (Markdown)</label>
+            <textarea id="content" name="content" required>{{ article.content if article else '' }}</textarea>
+        </div>
+        <div class="preview-pane">
+            <label>Preview</label>
+            <div id="preview" class="markdown-preview">
+                <p class="placeholder-text">Start typing to see preview...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="excerpt">Excerpt (optional)</label>
+        <textarea id="excerpt" name="excerpt" rows="3">{{ article.excerpt if article and article.excerpt else '' }}</textarea>
+        <small style="color: var(--text-muted);">A short description for article listings</small>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" name="action" value="save">
+            {{ 'Save Changes' if article else 'Create Draft' }}
+        </button>
+        {% if article and article.status == 'draft' %}
+        <button type="submit" class="btn btn-success" name="action" value="publish">
+            Publish
+        </button>
+        {% endif %}
+        <a href="{{ url_for('admin.list') }}" class="btn btn-secondary">Cancel</a>
+        {% if article %}
+        <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+        {% endif %}
+    </div>
+</form>
+
+{% if article %}
+<div id="deleteModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Confirm Deletion</h2>
+        <p>Are you sure you want to delete "{{ article.title }}"?</p>
+        <p class="warning">This action cannot be undone.</p>
+        <div class="modal-actions">
+            <form method="POST" action="{{ url_for('admin.delete', slug=article.slug) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+// Simple markdown preview (basic implementation)
+const contentArea = document.getElementById('content');
+const preview = document.getElementById('preview');
+
+if (contentArea && preview) {
+    contentArea.addEventListener('input', function() {
+        const content = this.value;
+        if (content.trim()) {
+            // Basic markdown to HTML conversion
+            let html = content
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/\n/g, '<br>');
+            preview.innerHTML = html;
+        } else {
+            preview.innerHTML = '<p class="placeholder-text">Start typing to see preview...</p>';
+        }
+    });
+}
+
+function confirmDelete() {
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('deleteModal');
+    if (modal && e.target === modal) {
+        closeModal();
+    }
+});
+</script>
+{% endblock %}
