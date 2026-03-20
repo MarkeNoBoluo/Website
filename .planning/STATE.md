@@ -9,7 +9,7 @@ progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 20
-  completed_plans: 18
+  completed_plans: 19
 ---
 
 # Project State
@@ -21,13 +21,18 @@ progress:
 ## Current Position
 
 Phase: 05 (blog-management) — IN PROGRESS
-Plan: 5 of 4 (05-04 complete)
+Plan: 2 of 4 (05-01 complete)
 
 ## Decisions Made
 
 - Login page includes admin.css for consistent dark theme styling
 - Flash messages show all categories (success, error, warning, info)
 - Admin templates created as placeholder structure for future admin blueprint
+- Article model uses SQLAlchemy ORM with status field for draft/published workflow
+- Admin routes protected with @login_required and @csrf_protected decorators
+- Slug generation handles duplicates by appending incrementing suffix (-2, -3, etc.)
+- Blog routes read from database instead of file system
+- Migration script imports posts/ files to database and archives originals
 
 ## Accumulated Context
 
@@ -56,7 +61,7 @@ Plan: 5 of 4 (05-04 complete)
 ## Session Continuity
 
 Last session: 2026-03-21
-Stopped at: Completed 05-04 plan (UI unification)
+Stopped at: Completed 05-01 plan (Article model, admin CRUD, migration script)
 Resume file: .planning/phases/05-blog-management/05-CONTEXT.md
 
 ---

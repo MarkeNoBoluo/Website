@@ -209,9 +209,9 @@
 6. All pages (login, admin forms, article list) use consistent dark theme
 
 **Requirements Covered:**
-- BLOG-MGMT-01: Article CRUD (create, read, update, delete)
-- BLOG-MGMT-02: Draft/Publish status management
-- BLOG-MGMT-03: Admin article listing with filters
+- BLOG-MGMT-01: Article CRUD (create, read, update, delete) ✓
+- BLOG-MGMT-02: Draft/Publish status management ✓
+- BLOG-MGMT-03: Admin article listing with filters ✓
 
 **Deliverables:**
 - `app/models.py`: Article model with title, content, slug, status, timestamps
@@ -222,10 +222,10 @@
 - `app/static/css/admin.css`: Admin-specific styles
 
 **Plans:** 4/4 plans planned
-- [ ] 05-01-PLAN.md — Database model and article CRUD routes
+- [x] 05-01-PLAN.md — Database model and article CRUD routes
 - [ ] 05-02-PLAN.md — Admin templates and article list with status filters
 - [ ] 05-03-PLAN.md — Draft/publish workflow implementation
-- [ [x] 05-04-PLAN.md — UI unification across login and admin pages
+- [x] 05-04-PLAN.md — UI unification across login and admin pages
 
 **Dependencies:** Phase 3 (blog display), Phase 2 (auth)
 

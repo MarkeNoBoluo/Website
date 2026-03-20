@@ -28,6 +28,12 @@ Requirements for initial release.
 - [x] **AUTH-01**: 博主可通过密码登录进入后台功能（session 认证，密码哈希存 .env）
 - [x] **AUTH-02**: 未登录时无法访问后台路由（`@login_required` 保护）
 
+### Blog Management
+
+- [x] **BLOG-MGMT-01**: Article CRUD (create, read, update, delete) - Article model and admin routes
+- [x] **BLOG-MGMT-02**: Draft/Publish status management - Article model with status field
+- [x] **BLOG-MGMT-03**: Admin article listing with filters - Admin routes with status filter
+
 ## v1.x Requirements
 
 Deferred to immediately after v1 launch. Not in v1 roadmap.
@@ -92,12 +98,15 @@ Updated during roadmap creation.
 | BLOG-03 | Phase 3 | Complete |
 | BLOG-04 | Phase 3 | Complete |
 | BLOG-05 | Phase 3 | Complete |
+| BLOG-MGMT-01 | Phase 5 | Complete |
+| BLOG-MGMT-02 | Phase 5 | Complete |
+| BLOG-MGMT-03 | Phase 5 | Complete |
 
 **Coverage:**
-- v1 requirements: 12 total
-- Mapped to phases: 12
+- v1 requirements: 15 total
+- Mapped to phases: 15
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-12*
-*Last updated: 2026-03-12 after initial definition*
+*Last updated: 2026-03-21 after Phase 5 execution*
