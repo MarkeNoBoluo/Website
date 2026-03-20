@@ -221,11 +221,11 @@
 - Updated `app/auth/routes.py`: Consistent dark theme on login
 - `app/static/css/admin.css`: Admin-specific styles
 
-**Plans:** 4 plans
-- [ ] 05-01-PLAN.md — Database model and article CRUD routes
-- [ ] 05-02-PLAN.md — Admin templates and article list with status filters
-- [ ] 05-03-PLAN.md — Draft/publish workflow implementation
-- [ ] 05-04-PLAN.md — UI unification across login and admin pages
+**Plans:** 4/4 plans complete
+- [x] 05-01-PLAN.md — Database model and article CRUD routes
+- [x] 05-02-PLAN.md — Admin templates and article list with status filters
+- [x] 05-03-PLAN.md — Draft/publish workflow implementation
+- [x] 05-04-PLAN.md — UI unification across login and admin pages
 
 **Dependencies:** Phase 3 (blog display), Phase 2 (auth)
 
