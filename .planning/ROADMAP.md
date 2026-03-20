@@ -221,11 +221,11 @@
 - Updated `app/auth/routes.py`: Consistent dark theme on login
 - `app/static/css/admin.css`: Admin-specific styles
 
-**Plans:** 4/4 plans complete
-- [x] 05-01-PLAN.md — Database model and article CRUD routes
-- [x] 05-02-PLAN.md — Admin templates and article list with status filters
-- [x] 05-03-PLAN.md — Draft/publish workflow implementation
-- [x] 05-04-PLAN.md — UI unification across login and admin pages
+**Plans:** 4/4 plans planned
+- [ ] 05-01-PLAN.md — Database model and article CRUD routes
+- [ ] 05-02-PLAN.md — Admin templates and article list with status filters
+- [ ] 05-03-PLAN.md — Draft/publish workflow implementation
+- [ ] 05-04-PLAN.md — UI unification across login and admin pages
 
 **Dependencies:** Phase 3 (blog display), Phase 2 (auth)
 
@@ -243,7 +243,7 @@
 
 ## Next Steps
 
-1. **Execute Phase 1** (`/gsd:execute-phase 01-infrastructure-foundation`): 建立部署管线
+1. **Execute Phase 5** (`/gsd-execute-phase 05-blog-management`): Article CRUD, admin interface, UI unification
 2. **Verify** each phase's success criteria before proceeding
 3. **Commit** code at end of each phase
 
@@ -251,6 +251,7 @@
 *Roadmap created: 2026-03-12*
 *Updated: 2026-03-13 (added Phase 1 plans)*
 *Updated: 2026-03-13 (added Phase 2 plans)*
-*Updated: 2026-03-14 (revised Phase 2 plans - reduced from 6 to 4 plans, moved user management and security enhancements to backlog)*
+*Updated: 2026-03-14 (revised Phase 2 plans)*
 *Updated: 2026-03-15 (added Phase 3 plans)*
 *Updated: 2026-03-16 (added Phase 4 plans)*
+*Updated: 2026-03-20 (added Phase 5 plans)*
