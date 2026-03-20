@@ -57,3 +57,4 @@ Thumbs.db
 # Project specific
 blog.db  # SQLite database file
 .planning/STATE.md.local  # Local state overrides (if any)
+posts-archive/  # Archived migrated posts
