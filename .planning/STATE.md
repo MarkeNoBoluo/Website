@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
+milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 05-02 plan
-last_updated: "2026-03-20T16:12:26Z"
+status: unknown
+stopped_at: Completed 05-03 plan
+last_updated: "2026-03-20T16:14:52.297Z"
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 20
-  completed_plans: 20
+  completed_plans: 21
 ---
 
 # Project State
@@ -21,7 +21,7 @@ progress:
 ## Current Position
 
 Phase: 05 (blog-management) — IN PROGRESS
-Plan: 2 of 4 (05-01, 05-02 complete)
+Plan: 3 of 4 (05-01, 05-02, 05-03 complete)
 
 ## Decisions Made
 
@@ -35,6 +35,8 @@ Plan: 2 of 4 (05-01, 05-02 complete)
 - Migration script imports posts/ files to database and archives originals
 - Server-side markdown preview for consistent styling with blog articles
 - Debounced preview updates (300ms) to reduce server load
+- Public blog routes filter by status='published', drafts return 404
+- Cache invalidation on article changes via lru_cache.cache_clear()
 
 ## Accumulated Context
 
@@ -62,9 +64,9 @@ Plan: 2 of 4 (05-01, 05-02 complete)
 
 ## Session Continuity
 
-Last session: 2026-03-20
-Stopped at: Completed 05-02 plan (Admin templates with markdown editor)
-Resume file: .planning/phases/05-blog-management/05-CONTEXT.md
+Last session: 2026-03-20T16:14:52.295Z
+Stopped at: Completed 05-03 plan
+Resume file: None
 
 ---
 
