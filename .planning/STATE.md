@@ -1,231 +1,52 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: 04
-status: executing
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-03-17T02:00:48.051Z"
+milestone: v1.1
+milestone_name: Blog Management + UI Polish
+current_phase: Not started
+status: defining_requirements
+last_updated: "2026-03-20T00:00:00.000Z"
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 16
-  completed_plans: 17
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: 3
-status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-03-17T00:18:44.549Z"
-progress:
-  total_phases: 4
-  completed_phases: 3
-  total_plans: 16
-  completed_plans: 15
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: 3
-status: executing
-stopped_at: Completed 03-03-PLAN.md, ready for Phase 3 verification
-last_updated: "2026-03-15T15:18:23.651Z"
-progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 13
-  completed_plans: 14
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: Phase 3 context gathered — ready for planning
-status: executing
-stopped_at: Completed 03-02-PLAN.md, ready for 03-03
-last_updated: "2026-03-15T05:07:26.847Z"
-progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 12
-  completed_plans: 13
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: Phase 3 context gathered — ready for planning
-status: executing
-stopped_at: Completed 03-01-PLAN.md, ready for 03-02
-last_updated: "2026-03-15T05:06:33.027Z"
-progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 12
-  completed_plans: 13
-  percent: 100
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: Phase 3 context gathered — ready for planning
-status: executing
-stopped_at: Completed 03-01-PLAN.md, ready for 03-02
-last_updated: "2026-03-15T04:50:25.158Z"
-progress:
-  [██████████] 100%
-  completed_phases: 2
-  total_plans: 12
-  completed_plans: 12
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: Phase 3 execution in progress
-current_plan: 03-02 (Blog routes and templates)
-status: executing
-stopped_at: Completed 03-02-PLAN.md, ready for 03-03
-last_updated: "2026-03-15T12:00:00.000Z"
-progress:
-  total_phases: 3
-  completed_phases: 2
-  total_plans: 10
-  completed_plans: 10
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
-**Project:** 个人博客网站 (Personal Blog on Raspberry Pi 4B)
-**Created:** 2026-03-12
-**Current Phase:** 04
+**Project:** 个人博客网站 (Personal Blog on Raspberry Pi 4B)  
+**Current Milestone:** v1.1 — Blog Management + UI Polish  
+**Started:** 2026-03-20
 
-## Status
+## Current Position
 
 | Item | Status | Last Updated |
 |------|--------|--------------|
-| Project definition | ✅ Complete | 2026-03-12 |
-| Research | ✅ Complete | 2026-03-12 |
-| Requirements | ✅ Complete | 2026-03-12 |
-| Roadmap | ✅ Complete | 2026-03-14 |
-| Phase 1 Planning | ✅ Complete | 2026-03-13 |
-| Phase 1 Execution | ✅ Complete | 2026-03-13 |
-| Phase 2 (Flask Skeleton) Planning | ✅ Complete | 2026-03-14 |
-| Phase 2 (Flask Skeleton) Execution | ✅ Complete (core functionality) | 2026-03-15 |
-| Phase 3 (Blog Articles) | ✅ Complete | 2026-03-15 |
-| Phase 4 (Cloudflare Tunnel) | 🟡 Plan 02 executing | 2026-03-17 |
+| Project definition | ✅ Complete | 2026-03-20 |
+| Requirements | 🟡 Defining | 2026-03-20 |
+| Roadmap | 🟡 Pending | — |
+| Phase Planning | 🟡 Pending | — |
 
-## Phase History
+## Accumulated Context
 
-| Phase | Status | Started | Completed |
-|-------|--------|---------|-----------|
-| Planning | ✅ Complete | 2026-03-12 | 2026-03-12 |
-| Phase 1 Planning | ✅ Complete | 2026-03-13 | 2026-03-13 |
-| Phase 1 Execution | ✅ Complete | 2026-03-13 | 2026-03-13 |
-| Phase 2 Planning | ✅ Complete | 2026-03-13 | 2026-03-14 |
+**From v1.0:**
+- Flask 3.1.3 + Gunicorn + Nginx + SQLite (WAL mode)
+- Markdown articles with frontmatter, Pygments syntax highlighting
+- Dark tech theme (#1a1a1a base), responsive design
+- Session-based auth with Flask-Bcrypt
+- Cloudflare Tunnel for external access
 
-## Current Phase Details
+**Key Decisions Carried Forward:**
+- Python/Flask stack (lightweight for RPi 4B)
+- SQLite single-file database
+- Git push deployment workflow
+- VSCode Remote SSH development
 
-**Current phase:** Phase 4 — Cloudflare Tunnel 内网穿透
+## v1.1 Focus Areas
 
-**Goal:** 通过 Cloudflare Tunnel 将运行在树莓派上的 Flask 博客网站通过域名公开访问，无需公网 IP 和端口转发。
-
-**Success Criteria:**
-1. 用户可通过 `https://blog.example.com` 从公网访问博客
-2. 健康状态可通过 `https://status.example.com/health` 监控
-3. 隧道服务在系统重启后自动恢复连接
-4. 修改隧道配置后，部署脚本自动应用更改并重启服务
-5. 隧道凭证和敏感信息安全管理，不提交到 git
-
-**Plans created:** 3 (04-01, 04-02, 04-03)
-**Plans executed:** 2 (04-01, 04-02)
-**Context gathered:** ✅ Complete (04-CONTEXT.md created)
-
-**Next Phase:** Complete Phase 4 Plan 03 (Health endpoint and verification)
-
-## Requirements Coverage
-
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| INFRA-01 | Phase 1 | ✅ Complete |
-| INFRA-02 | Phase 1 | ✅ Complete |
-| INFRA-03 | Phase 1 | ✅ Complete |
-| INFRA-04 | Phase 1 | ✅ Complete |
-| INFRA-05 | Phase 1 | ✅ Complete |
-| AUTH-01 | Phase 2 | ✅ Complete (core functionality verified) |
-| AUTH-02 | Phase 2 | ✅ Complete (core functionality verified) |
-| BLOG-01 | Phase 3 | ✅ Complete |
-| BLOG-02 | Phase 3 | ✅ Complete |
-| BLOG-03 | Phase 3 | ✅ Complete |
-| BLOG-04 | Phase 3 | ✅ Complete (03-03) |
-| BLOG-05 | Phase 3 | 🟡 Context gathered |
-
-**Coverage:** 100% (12/12 v1 requirements mapped)
-
-## Notes
-
-- **Research completed:** 4 dimensions (stack, features, architecture, pitfalls)
-- **Stack decided:** Flask 3.1.3 + mistune 3.2.0 + SQLite + Gunicorn + Nginx + systemd
-- **Key pitfalls identified:** XSS via `| safe`, SQLite locking, SD card wear, post‑receive hook silent failures
-- **v1 scope narrowed:** No comments, no frp/ngrok, no todo in v1 (deferred to v2)
-- **Auth added to v1:** Password-based authentication implemented in Phase 2
-- **v1.x enhancements:** RSS, sitemap, Open Graph meta tags (post‑v1)
-
-## Decisions Log
-
-| Date | Decision | Rationale |
-|------|----------|-----------|
-| 2026-03-12 | Use Flask over FastAPI | Flask is WSGI‑sync, template‑first, lower RAM (~15MB). FastAPI's async advantage irrelevant at personal‑blog scale. |
-| 2026-03-12 | Use SQLite with WAL mode | Zero‑config, single‑file, handles blog/task traffic. WAL mode prevents "database is locked" under Gunicorn 2 workers. |
-| 2026-03-12 | Defer comments to v2 | Focus v1 on core blog content and deployment pipeline; comments require spam defense and rate limiting. |
-| 2026-03-12 | Deploy pipeline first | Infrastructure must work before any feature code; prevents "works on dev, broken on Pi" surprises. |
-| 2026-03-13 | Phase 1 plans created | 6 plans covering all INFRA requirements with wave-based dependency structure |
-| 2026-03-13 | Gunicorn Unix socket configuration | Use `/tmp/blog.sock` for Nginx communication instead of TCP port for better security and performance on Raspberry Pi |
-| 2026-03-13 | Platform-aware testing | Test script handles Windows development limitations while validating configuration for Linux/Raspberry Pi deployment |
-| 2026-03-13 | Nginx static file caching | No caching headers for static files to simplify debugging during development phase |
-| 2026-03-13 | Gzip compression settings | Level 6 compression for text responses with 256 byte minimum length for optimal performance |
-| 2026-03-13 | Client request limits | 10MB max body size for security, 12s timeouts for request processing on Raspberry Pi |
-| 2026-03-13 | Phase 2 plans created | 4 plans covering authentication with application factory, WAL mode, Flask-Bcrypt, and blueprint structure |
-| 2026-03-14 | Phase 2 plans expanded | Added 2 additional plans (05-06) for user management and security enhancements |
-| 2026-03-14 | Application factory pattern | Converted monolithic app.py to application factory for better testability, configuration management, and blueprint support |
-| 2026-03-14 | Flask-Bcrypt with centralized extensions | Used Flask-Bcrypt for password hashing with work factor 12, created app/extensions.py for centralized extension management |
-| 2026-03-15 | Phase 3 context gathered | Article card layout, mistune+frontmatter, dark gray theme (#1a1a1a), flat file structure with YYYY-MM-DD-slug.md naming, 404 page with 3 random articles |
-| 2026-03-15 | Phase 3 Plan 01 execution | Implemented Markdown processing with Pygments syntax highlighting (monokai dark theme), frontmatter parsing, and LRU caching for blog articles |
-| 2026-03-15 | Phase 3 Plan 02 execution | Created blog routes and templates with card layout, article detail pages, custom 404 with random recommendations, and global 404 handler |
-| 2026-03-15 | Phase 3 Plan 03 execution | Implemented dark theme CSS with responsive design, external Pygments CSS, and template cleanup removing inline styles. Fixed template/static file paths for Flask default directories. |
-
-## Configuration
-
-- **Mode:** interactive
-- **Granularity:** coarse (3 phases)
-- **Parallelization:** true
-- **Git tracking:** yes (planning docs committed)
-- **Research before planning:** yes
-- **Plan check before execution:** yes
-- **Verifier after each phase:** yes
-
-## Roadmap Evolution
-
-- Phase 4 added: 实现 Cloudflare 隧道内网穿透 (2026-03-16)
-
-## Session Info
-
-**Last session:** 2026-03-17T00:26:39.000Z
-**Stopped at:** Completed 04-02-PLAN.md
-**Next action:** Execute Phase 4 Plan 03: `/gsd:execute-phase 04-03`
+1. **Blog Management (CRUD)** — Article create/edit/delete with draft/publish states
+2. **UI Style Unification** — Apply homepage dark theme to all interfaces (login, admin, forms)
 
 ---
 
-*State file created: 2026-03-12*
-*Last updated: 2026-03-17 (Phase 4 Plan 02 completed - ready for Plan 03)*
+*State reset for milestone v1.1*

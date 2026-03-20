@@ -59,5 +59,15 @@
 | Git post-receive 自动部署 | 推送即部署，开发体验流畅 | — Pending |
 | 内网穿透方案 | 无固定公网 IP，frp/ngrok 是可行方案 | — Pending |
 
+## Current Milestone: v1.1 Blog Management
+
+**Goal:** 为博客添加文章管理功能（增删改查），并统一全站UI风格
+
+**Target features:**
+- 博客文章管理后台：创建、编辑、删除文章
+- 文章草稿/发布状态管理
+- 统一全站暗色技术风格（登录页、管理页、表单页）
+- 响应式布局适配移动端管理操作
+
 ---
-*Last updated: 2026-03-12 after initialization*
+*Last updated: 2026-03-20 after milestone v1.1 start*
