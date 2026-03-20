@@ -196,6 +196,46 @@
 
 **Coverage:** 100% (14/14 v1 requirements mapped)
 
+### Phase 5: Blog Management (CRUD)
+
+**Goal:** Add article management capabilities (create, edit, delete) with draft/publish workflow, and unify UI across all interfaces.
+
+**Success Criteria:**
+1. Admin can create new articles via web form (title, content in Markdown, excerpt optional)
+2. Admin can edit existing articles via web form
+3. Admin can delete articles with confirmation
+4. Articles have draft/publish status - drafts hidden from public listing
+5. Admin has article list with status indicators and quick actions
+6. All pages (login, admin forms, article list) use consistent dark theme
+
+**Requirements Covered:**
+- BLOG-MGMT-01: Article CRUD (create, read, update, delete)
+- BLOG-MGMT-02: Draft/Publish status management
+- BLOG-MGMT-03: Admin article listing with filters
+
+**Deliverables:**
+- `app/models.py`: Article model with title, content, slug, status, timestamps
+- `app/blog/admin_routes.py`: Admin routes for CRUD operations
+- `app/blog/templates/admin/*.html`: Admin templates (list, create, edit, delete confirmation)
+- Updated `app/blog/utils.py`: Support database articles alongside file-based
+- Updated `app/auth/routes.py`: Consistent dark theme on login
+- `app/static/css/admin.css`: Admin-specific styles
+
+**Plans:** 4 plans
+- [ ] 05-01-PLAN.md — Database model and article CRUD routes
+- [ ] 05-02-PLAN.md — Admin templates and article list with status filters
+- [ ] 05-03-PLAN.md — Draft/publish workflow implementation
+- [ ] 05-04-PLAN.md — UI unification across login and admin pages
+
+**Dependencies:** Phase 3 (blog display), Phase 2 (auth)
+
+**Research Needed:** None — Flask-SQLAlchemy CRUD patterns are well established.
+
+**Risks:**
+- File-based vs database article storage conflict (need migration strategy)
+- Markdown rendering consistency between file and database sources
+- Admin URL security (ensure only authenticated users can access)
+
 ## Out-of-Scope Items
 
 **v1.x (post‑v1):** RSS, Sitemap, Open Graph meta tags
