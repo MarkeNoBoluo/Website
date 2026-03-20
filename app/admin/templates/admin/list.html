@@ -5,61 +5,67 @@
 
 {% block admin_content %}
 <div class="admin-filters">
-    <a href="{{ url_for('admin.list') }}" class="filter-btn {% if not status %}active{% endif %}">All</a>
-    <a href="{{ url_for('admin.list', status='published') }}" class="filter-btn {% if status == 'published' %}active{% endif %}">Published</a>
-    <a href="{{ url_for('admin.list', status='draft') }}" class="filter-btn {% if status == 'draft' %}active{% endif %}">Drafts</a>
+    <a href="{{ url_for('admin.list', status='all') }}" 
+       class="filter-btn {% if status_filter == 'all' %}active{% endif %}">
+        All
+    </a>
+    <a href="{{ url_for('admin.list', status='draft') }}" 
+       class="filter-btn {% if status_filter == 'draft' %}active{% endif %}">
+        Drafts
+    </a>
+    <a href="{{ url_for('admin.list', status='published') }}" 
+       class="filter-btn {% if status_filter == 'published' %}active{% endif %}">
+        Published
+    </a>
 </div>
 
-{% if articles %}
-<div class="articles-grid">
-    {% for article in articles %}
-    <div class="article-card admin-card">
-        <div class="article-card-header">
-            <h2 class="article-title">
-                <a href="{{ url_for('admin.edit', slug=article.slug) }}">{{ article.title }}</a>
-            </h2>
-            <span class="status-badge {{ article.status }}">{{ article.status }}</span>
-        </div>
-        <p class="slug-preview">/{{ article.slug }}</p>
-        <p class="article-meta">
-            {{ article.formatted_date if article.formatted_date else article.date.strftime('%Y-%m-%d') if article.date else 'No date' }}
-            {% if article.word_count %}
-                &bull; {{ article.word_count }} words
-            {% endif %}
-        </p>
-        <div class="form-actions">
-            <a href="{{ url_for('admin.edit', slug=article.slug) }}" class="btn btn-secondary">Edit</a>
-            <a href="{{ url_for('blog.article', slug=article.slug) }}" class="btn btn-preview" target="_blank">Preview</a>
-            {% if article.status == 'draft' %}
-            <form action="{{ url_for('admin.publish', slug=article.slug) }}" method="POST" style="display: inline;">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-success">Publish</button>
-            </form>
-            {% else %}
-            <form action="{{ url_for('admin.unpublish', slug=article.slug) }}" method="POST" style="display: inline;">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-warning">Unpublish</button>
-            </form>
-            {% endif %}
-            <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ article.slug }}', '{{ article.title|escape }}')">Delete</button>
-        </div>
+<div class="admin-articles">
+    {% if articles %}
+    <div class="articles-grid">
+        {% for article in articles %}
+        <article class="article-card admin-card">
+            <div class="card-content">
+                <div class="article-card-header">
+                    <span class="status-badge {{ article.status }}">{{ article.status }}</span>
+                </div>
+                <h2 class="article-title">
+                    <a href="{{ url_for('admin.edit', id=article.id) }}">{{ article.title }}</a>
+                </h2>
+                <div class="article-meta">
+                    <time datetime="{{ article.updated_at.isoformat() if article.updated_at else '' }}">
+                        {{ article.updated_at.strftime('%B %d, %Y') if article.updated_at else 'N/A' }}
+                    </time>
+                    <span class="slug-preview">/{{ article.slug }}</span>
+                </div>
+                <div class="article-actions">
+                    <a href="{{ url_for('admin.edit', id=article.id) }}" class="btn btn-secondary">Edit</a>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete({{ article.id }}, '{{ article.title|e }}')">Delete</button>
+                    {% if article.status == 'published' %}
+                    <a href="{{ url_for('blog.article_detail', slug=article.slug) }}" 
+                       class="btn btn-preview" target="_blank">
+                        Preview
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+        {% endfor %}
     </div>
-    {% endfor %}
+    {% else %}
+    <div class="no-articles">
+        <p>No articles found. <a href="{{ url_for('admin.create') }}">Create your first article</a></p>
+    </div>
+    {% endif %}
 </div>
-{% else %}
-<div class="no-articles">
-    <p>No articles found.</p>
-    <p><a href="{{ url_for('admin.create') }}">Create your first article</a></p>
-</div>
-{% endif %}
 
+<!-- Delete confirmation modal -->
 <div id="deleteModal" class="modal" style="display: none;">
     <div class="modal-content">
-        <h2>Confirm Deletion</h2>
+        <h2>Delete Article</h2>
         <p>Are you sure you want to delete "<span id="deleteTitle"></span>"?</p>
         <p class="warning">This action cannot be undone.</p>
         <div class="modal-actions">
-            <form id="deleteForm" method="POST">
+            <form id="deleteForm" method="POST" style="display: inline;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
@@ -67,11 +73,14 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+{{ super() }}
 <script>
-function confirmDelete(slug, title) {
+function confirmDelete(id, title) {
     document.getElementById('deleteTitle').textContent = title;
-    document.getElementById('deleteForm').action = '/admin/delete/' + slug;
+    document.getElementById('deleteForm').action = '/admin/articles/' + id + '/delete';
     document.getElementById('deleteModal').style.display = 'flex';
 }
 
@@ -79,11 +88,9 @@ function closeModal() {
     document.getElementById('deleteModal').style.display = 'none';
 }
 
-// Close modal when clicking outside
+// Close modal on background click
 document.getElementById('deleteModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
+    if (e.target === this) closeModal();
 });
 </script>
 {% endblock %}
