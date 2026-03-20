@@ -72,9 +72,9 @@ def create_app(config_class=Config):
     @app.route("/")
     def index():
         """Homepage — terminal-themed blog landing page."""
-        from .blog.utils import get_all_articles
+        from .blog.utils import get_db_articles
 
-        articles = get_all_articles()
+        articles = get_db_articles(status="published")
         return render_template("home.html", articles=articles)
 
     @app.route("/health")

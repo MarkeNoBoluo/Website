@@ -1,4 +1,5 @@
 """Article scanning, caching, and utility functions."""
+
 import os
 import re
 from datetime import datetime, date
@@ -50,7 +51,7 @@ def parse_article_file(filepath: Path) -> Optional[Dict]:
             return None
 
         # Parse date from frontmatter (expects YYYY-MM-DD format)
-        date_value = post.get('date')
+        date_value = post.get("date")
         if isinstance(date_value, str):
             date_obj = datetime.fromisoformat(date_value).date()
         elif isinstance(date_value, datetime):
@@ -62,18 +63,18 @@ def parse_article_file(filepath: Path) -> Optional[Dict]:
             date_obj = datetime.fromtimestamp(filepath.stat().st_mtime).date()
 
         # Extract excerpt: use frontmatter excerpt or generate from content
-        excerpt = post.get('excerpt')
+        excerpt = post.get("excerpt")
         if not excerpt:
             # Get first paragraph or first 200 characters
             content_text = post.content.strip()
             # Split by double newline (paragraphs)
-            paragraphs = content_text.split('\n\n')
+            paragraphs = content_text.split("\n\n")
             if paragraphs:
                 first_para = paragraphs[0].strip()
                 # Remove Markdown headers and code blocks for excerpt
-                first_para = re.sub(r'^#+\s+', '', first_para)  # Remove headers
-                first_para = re.sub(r'`.*?`', '', first_para)  # Remove inline code
-                first_para = re.sub(r'\s+', ' ', first_para)  # Normalize whitespace
+                first_para = re.sub(r"^#+\s+", "", first_para)  # Remove headers
+                first_para = re.sub(r"`.*?`", "", first_para)  # Remove inline code
+                first_para = re.sub(r"\s+", " ", first_para)  # Normalize whitespace
                 excerpt = first_para[:200].strip()
                 if len(first_para) > 200:
                     excerpt += "..."
@@ -84,13 +85,13 @@ def parse_article_file(filepath: Path) -> Optional[Dict]:
         html_content = render_markdown(post.content)
 
         return {
-            'title': post.get('title', 'Untitled'),
-            'date': date_obj,
-            'slug': slug,
-            'excerpt': excerpt,
-            'content': html_content,  # Rendered HTML (per plan specification)
-            'raw_content': post.content,  # Raw markdown for internal use
-            'filepath': str(filepath),
+            "title": post.get("title", "Untitled"),
+            "date": date_obj,
+            "slug": slug,
+            "excerpt": excerpt,
+            "content": html_content,  # Rendered HTML (per plan specification)
+            "raw_content": post.content,  # Raw markdown for internal use
+            "filepath": str(filepath),
         }
     except Exception as e:
         # Log error and skip file
@@ -126,7 +127,7 @@ def get_all_articles() -> List[Dict]:
     """
     articles = scan_articles()
     # Sort by date descending (newest first)
-    articles.sort(key=lambda x: x['date'], reverse=True)
+    articles.sort(key=lambda x: x["date"], reverse=True)
     return articles
 
 
@@ -142,6 +143,104 @@ def get_article_by_slug(slug: str) -> Optional[Dict]:
     """
     articles = scan_articles()
     for article in articles:
-        if article['slug'] == slug:
+        if article["slug"] == slug:
             return article
     return None
+
+
+# Database-backed article functions
+@lru_cache(maxsize=100)
+def get_db_articles(status="published") -> List[Dict]:
+    """Get articles from database.
+
+    Args:
+        status: Filter by status ('published', 'draft', or None for all)
+
+    Returns:
+        List of article dictionaries
+    """
+    from app.models import Article
+    from app.markdown import render_markdown
+    from datetime import date
+
+    query = Article.query
+    if status:
+        query = query.filter_by(status=status)
+
+    articles = query.order_by(Article.updated_at.desc()).all()
+
+    result = []
+    for article in articles:
+        # Generate excerpt from content
+        content_text = article.content.strip()
+        paragraphs = content_text.split("\n\n")
+        if paragraphs:
+            first_para = paragraphs[0].strip()
+            first_para = re.sub(r"^#+\s+", "", first_para)
+            first_para = re.sub(r"`.*?`", "", first_para)
+            first_para = re.sub(r"\s+", " ", first_para)
+            excerpt = first_para[:200].strip() + (
+                "..." if len(first_para) > 200 else ""
+            )
+        else:
+            excerpt = ""
+
+        result.append(
+            {
+                "title": article.title,
+                "date": article.updated_at.date()
+                if hasattr(article.updated_at, "date")
+                else date.today(),
+                "slug": article.slug,
+                "excerpt": excerpt,
+                "content": render_markdown(article.content),
+                "raw_content": article.content,
+                "article_id": article.id,
+                "status": article.status,
+            }
+        )
+
+    return result
+
+
+@lru_cache(maxsize=100)
+def get_db_article_by_slug(slug: str) -> Optional[Dict]:
+    """Get article by slug from database.
+
+    Args:
+        slug: Article slug
+
+    Returns:
+        Article dictionary or None
+    """
+    from app.models import Article
+    from app.markdown import render_markdown
+    from datetime import date
+
+    article = Article.query.filter_by(slug=slug).first()
+    if not article:
+        return None
+
+    content_text = article.content.strip()
+    paragraphs = content_text.split("\n\n")
+    if paragraphs:
+        first_para = paragraphs[0].strip()
+        first_para = re.sub(r"^#+\s+", "", first_para)
+        first_para = re.sub(r"`.*?`", "", first_para)
+        first_para = re.sub(r"\s+", " ", first_para)
+        excerpt = first_para[:200].strip() + ("..." if len(first_para) > 200 else "")
+    else:
+        excerpt = ""
+
+    return {
+        "title": article.title,
+        "date": article.updated_at.date()
+        if hasattr(article.updated_at, "date")
+        else date.today(),
+        "slug": article.slug,
+        "excerpt": excerpt,
+        "content": render_markdown(article.content),
+        "raw_content": article.content,
+        "article_id": article.id,
+        "status": article.status,
+    }
