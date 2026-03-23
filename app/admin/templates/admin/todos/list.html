@@ -1,0 +1,95 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Todos - Admin{% endblock %}
+
+{% block breadcrumbs %}
+    <span>&gt;</span>
+    <span>Todos</span>
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h2>Todos</h2>
+    <a href="{{ url_for('admin.create_todo') }}" class="btn btn-primary">New Todo</a>
+</div>
+
+<form method="GET" class="toolbar">
+    <div class="search-box">
+        <input type="text" name="search" placeholder="Search title..." value="{{ search }}">
+    </div>
+    <select name="quadrant" class="form-control" style="width: auto;">
+        <option value="all">All Quadrants</option>
+        <option value="1" {% if quadrant == '1' %}selected{% endif %}>Q1 - Urgent & Important</option>
+        <option value="2" {% if quadrant == '2' %}selected{% endif %}>Q2 - Important</option>
+        <option value="3" {% if quadrant == '3' %}selected{% endif %}>Q3 - Urgent</option>
+        <option value="4" {% if quadrant == '4' %}selected{% endif %}>Q4 - Neither</option>
+    </select>
+    <select name="priority" class="form-control" style="width: auto;">
+        <option value="all">All Priorities</option>
+        {% for p in range(1, 6) %}
+        <option value="{{ p }}" {% if priority == p|string %}selected{% endif %}>Priority {{ p }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-secondary">Filter</button>
+    <a href="{{ url_for('admin.todos') }}" class="btn btn-secondary">Reset</a>
+</form>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Quadrant</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for todo in todos %}
+        <tr>
+            <td>{{ todo.title }}</td>
+            <td><span class="badge quadrant-{{ todo.quadrant }}">Q{{ todo.quadrant }}</span></td>
+            <td class="priority-{% if todo.priority <= 2 %}high{% elif todo.priority == 3 %}medium{% else %}low{% endif %}">
+                {{ todo.priority }}
+            </td>
+            <td>
+                {% if todo.completed %}
+                <span class="badge badge-published">Completed</span>
+                {% else %}
+                <span class="badge badge-draft">Pending</span>
+                {% endif %}
+            </td>
+            <td class="actions">
+                <a href="{{ url_for('admin.edit_todo', id=todo.id) }}" class="btn btn-secondary">Edit</a>
+                <form method="POST" action="{{ url_for('admin.complete_todo', id=todo.id) }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn btn-success">{{ 'Uncomplete' if todo.completed else 'Complete' }}</button>
+                </form>
+                <form method="POST" action="{{ url_for('admin.delete_todo', id=todo.id) }}" style="display: inline;" onsubmit="return confirm('Delete this todo?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" style="text-align: center; color: var(--text-secondary);">No todos found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if pagination.pages > 1 %}
+<div class="pagination">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('admin.todos', page=pagination.prev_num, search=search, quadrant=quadrant, priority=priority) }}">&laquo; Prev</a>
+    {% endif %}
+    {% for p in range(1, pagination.pages + 1) %}
+    <a href="{{ url_for('admin.todos', page=p, search=search, quadrant=quadrant, priority=priority) }}" class="{% if p == pagination.page %}active{% endif %}">{{ p }}</a>
+    {% endfor %}
+    {% if pagination.has_next %}
+    <a href="{{ url_for('admin.todos', page=pagination.next_num, search=search, quadrant=quadrant, priority=priority) }}">Next &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "admin/base.html" %}
+
+{% block title %}New Todo - Admin{% endblock %}
+
+{% block breadcrumbs %}
+    <span>&gt;</span>
+    <span>Todos</span>
+    <span>&gt;</span>
+    <span>New</span>
+{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 1.5rem;">New Todo</h2>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    
+    <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="title" class="form-control" required value="{{ form_data.title if form_data else '' }}">
+    </div>
+    
+    <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" class="form-control" rows="4">{{ form_data.description if form_data else '' }}</textarea>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+            <label>Quadrant</label>
+            <select name="quadrant" class="form-control">
+                <option value="1">Q1 - Urgent & Important</option>
+                <option value="2" selected>Q2 - Important</option>
+                <option value="3">Q3 - Urgent</option>
+                <option value="4">Q4 - Neither</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Priority</label>
+            <select name="priority" class="form-control">
+                <option value="1">1 - Highest</option>
+                <option value="2">2 - High</option>
+                <option value="3" selected>3 - Medium</option>
+                <option value="4">4 - Low</option>
+                <option value="5">5 - Lowest</option>
+            </select>
+        </div>
+    </div>
+    
+    <div style="display: flex; gap: 1rem;">
+        <button type="submit" class="btn btn-primary">Create Todo</button>
+        <a href="{{ url_for('admin.todos') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}
