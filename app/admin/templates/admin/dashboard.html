@@ -1,0 +1,99 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard - Admin{% endblock %}
+
+{% block breadcrumbs %}
+    <span>&gt;</span>
+    <span>Dashboard</span>
+{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 1.5rem;">Dashboard</h2>
+
+<!-- Statistics Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Articles</h3>
+        <div class="value">{{ stats.total_articles }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>Published</h3>
+        <div class="value">{{ stats.published_articles }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>Total Todos</h3>
+        <div class="value">{{ stats.total_todos }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>Total Users</h3>
+        <div class="value">{{ stats.total_users }}</div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <!-- Recent Articles -->
+    <div class="card">
+        <h3 style="margin-bottom: 1rem;">Recent Drafts</h3>
+        {% if recent_drafts %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in recent_drafts %}
+                <tr>
+                    <td>{{ article.title }}</td>
+                    <td><span class="badge badge-draft">{{ article.status }}</span></td>
+                    <td class="actions">
+                        <a href="{{ url_for('admin.edit_article', id=article.id) }}" class="btn btn-secondary">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color: var(--text-secondary);">No draft articles.</p>
+        {% endif %}
+    </div>
+
+    <!-- Recent Todos -->
+    <div class="card">
+        <h3 style="margin-bottom: 1rem;">Recent Todos</h3>
+        {% if recent_todos %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Quadrant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for todo in recent_todos %}
+                <tr>
+                    <td>{{ todo.title }}</td>
+                    <td><span class="badge quadrant-{{ todo.quadrant }}">Q{{ todo.quadrant }}</span></td>
+                    <td class="actions">
+                        <a href="{{ url_for('admin.edit_todo', id=todo.id) }}" class="btn btn-secondary">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color: var(--text-secondary);">No todos.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div style="margin-top: 1.5rem;">
+    <a href="{{ url_for('admin.articles') }}" class="btn btn-primary">Manage Articles</a>
+    <a href="{{ url_for('admin.todos') }}" class="btn btn-primary">Manage Todos</a>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-primary">Manage Users</a>
+</div>
+{% endblock %}
