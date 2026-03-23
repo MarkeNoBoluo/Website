@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+
+{% block title %}New Article - Admin{% endblock %}
+
+{% block breadcrumbs %}
+    <span>&gt;</span>
+    <span>Articles</span>
+    <span>&gt;</span>
+    <span>New</span>
+{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 1.5rem;">New Article</h2>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    
+    <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="title" class="form-control" required value="{{ form_data.title if form_data else '' }}">
+    </div>
+    
+    <div class="form-group">
+        <label>Content (Markdown)</label>
+        <textarea name="content" class="form-control" rows="15">{{ form_data.content if form_data else '' }}</textarea>
+    </div>
+    
+    <div class="form-group">
+        <label>Status</label>
+        <select name="status" class="form-control" style="width: auto;">
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+        </select>
+    </div>
+    
+    <div style="display: flex; gap: 1rem;">
+        <button type="submit" class="btn btn-primary">Create Article</button>
+        <a href="{{ url_for('admin.articles') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

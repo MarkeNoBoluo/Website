@@ -1,0 +1,91 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Articles - Admin{% endblock %}
+
+{% block breadcrumbs %}
+    <span>&gt;</span>
+    <span>Articles</span>
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h2>Articles</h2>
+    <a href="{{ url_for('admin.create_article') }}" class="btn btn-primary">New Article</a>
+</div>
+
+<form method="GET" class="toolbar">
+    <div class="search-box">
+        <input type="text" name="search" placeholder="Search title or content..." value="{{ search }}">
+    </div>
+    <select name="status" class="form-control" style="width: auto;">
+        <option value="all">All Status</option>
+        <option value="published" {% if status == 'published' %}selected{% endif %}>Published</option>
+        <option value="draft" {% if status == 'draft' %}selected{% endif %}>Draft</option>
+    </select>
+    <select name="sort" class="form-control" style="width: auto;">
+        <option value="updated_at" {% if sort_by == 'updated_at' %}selected{% endif %}>Updated</option>
+        <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Created</option>
+        <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title</option>
+    </select>
+    <button type="submit" class="btn btn-secondary">Filter</button>
+    <a href="{{ url_for('admin.articles') }}" class="btn btn-secondary">Reset</a>
+</form>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+        <tr>
+            <td><a href="{{ url_for('admin.edit_article', id=article.id) }}">{{ article.title }}</a></td>
+            <td><span class="badge badge-{{ article.status }}">{{ article.status }}</span></td>
+            <td>{{ article.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>{{ article.updated_at.strftime('%Y-%m-%d') }}</td>
+            <td class="actions">
+                <a href="{{ url_for('admin.edit_article', id=article.id) }}" class="btn btn-secondary">Edit</a>
+                {% if article.status == 'draft' %}
+                <form method="POST" action="{{ url_for('admin.publish_article', id=article.id) }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn btn-success">Publish</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{{ url_for('admin.unpublish_article', id=article.id) }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn btn-secondary">Unpublish</button>
+                </form>
+                {% endif %}
+                <form method="POST" action="{{ url_for('admin.delete_article', id=article.id) }}" style="display: inline;" onsubmit="return confirm('Delete this article?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" style="text-align: center; color: var(--text-secondary);">No articles found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if pagination.pages > 1 %}
+<div class="pagination">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('admin.articles', page=pagination.prev_num, search=search, status=status, sort=sort_by) }}">&laquo; Prev</a>
+    {% endif %}
+    {% for p in range(1, pagination.pages + 1) %}
+    <a href="{{ url_for('admin.articles', page=p, search=search, status=status, sort=sort_by) }}" class="{% if p == pagination.page %}active{% endif %}">{{ p }}</a>
+    {% endfor %}
+    {% if pagination.has_next %}
+    <a href="{{ url_for('admin.articles', page=pagination.next_num, search=search, status=status, sort=sort_by) }}">Next &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

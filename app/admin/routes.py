@@ -1,6 +1,6 @@
 """Admin routes for article CRUD."""
 
-from flask import render_template, redirect, url_for, flash, request, abort
+from flask import render_template, redirect, url_for, flash, request
 from . import bp
 from ..auth.utils import login_required
 from ..utils import csrf_protected
@@ -24,24 +24,49 @@ def preview():
 
 @bp.route("/articles")
 @login_required
-def list():
-    """List all articles (admin view - shows all statuses)."""
-    status_filter = request.args.get("status", "all")
-    if status_filter == "all":
-        articles = Article.query.order_by(Article.updated_at.desc()).all()
-    else:
-        articles = (
-            Article.query.filter_by(status=status_filter)
-            .order_by(Article.updated_at.desc())
-            .all()
+def articles():
+    """List articles with search/filter/sort/pagination."""
+    page = request.args.get("page", 1, type=int)
+    per_page = 10
+
+    search = request.args.get("search", "")
+    status = request.args.get("status", "all")
+    sort_by = request.args.get("sort", "updated_at")
+    sort_order = request.args.get("order", "desc")
+
+    query = Article.query
+
+    if search:
+        query = query.filter(
+            db.or_(Article.title.contains(search), Article.content.contains(search))
         )
-    return render_template("list.html", articles=articles, status_filter=status_filter)
+
+    if status != "all":
+        query = query.filter_by(status=status)
+
+    sort_column = getattr(Article, sort_by, Article.updated_at)
+    if sort_order == "desc":
+        query = query.order_by(sort_column.desc())
+    else:
+        query = query.order_by(sort_column.asc())
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    return render_template(
+        "admin/articles/list.html",
+        articles=pagination.items,
+        pagination=pagination,
+        search=search,
+        status=status,
+        sort_by=sort_by,
+        sort_order=sort_order,
+    )
 
 
 @bp.route("/articles/new", methods=["GET", "POST"])
 @login_required
 @csrf_protected
-def create():
+def create_article():
     """Create a new article."""
     if request.method == "POST":
         title = request.form.get("title", "").strip()
@@ -50,7 +75,7 @@ def create():
 
         if not title:
             flash("Title is required", "error")
-            return render_template("create.html", form_data=request.form)
+            return render_template("admin/articles/create.html", form_data=request.form)
 
         slug = generate_slug(title)
 
@@ -67,15 +92,15 @@ def create():
         get_db_article_by_slug.cache_clear()
 
         flash(f'Article "{title}" created successfully', "success")
-        return redirect(url_for("admin.list"))
+        return redirect(url_for("admin.articles"))
 
-    return render_template("create.html")
+    return render_template("admin/articles/create.html")
 
 
 @bp.route("/articles/<int:id>/edit", methods=["GET", "POST"])
 @login_required
 @csrf_protected
-def edit(id):
+def edit_article(id):
     """Edit an existing article."""
     article = Article.query.get_or_404(id)
 
@@ -86,9 +111,10 @@ def edit(id):
 
         if not title:
             flash("Title is required", "error")
-            return render_template("edit.html", article=article, form_data=request.form)
+            return render_template(
+                "admin/articles/edit.html", article=article, form_data=request.form
+            )
 
-        # Regenerate slug if title changed
         if title != article.title:
             article.slug = generate_slug(title)
 
@@ -102,15 +128,15 @@ def edit(id):
         get_db_article_by_slug.cache_clear()
 
         flash(f'Article "{title}" updated successfully', "success")
-        return redirect(url_for("admin.list"))
+        return redirect(url_for("admin.articles"))
 
-    return render_template("edit.html", article=article)
+    return render_template("admin/articles/edit.html", article=article)
 
 
 @bp.route("/articles/<int:id>/delete", methods=["POST"])
 @login_required
 @csrf_protected
-def delete(id):
+def delete_article(id):
     """Delete an article."""
     article = Article.query.get_or_404(id)
     title = article.title
@@ -122,13 +148,13 @@ def delete(id):
     get_db_article_by_slug.cache_clear()
 
     flash(f'Article "{title}" deleted successfully', "success")
-    return redirect(url_for("admin.list"))
+    return redirect(url_for("admin.articles"))
 
 
 @bp.route("/articles/<int:id>/publish", methods=["POST"])
 @login_required
 @csrf_protected
-def publish(id):
+def publish_article(id):
     """Publish an article (set status to published)."""
     article = Article.query.get_or_404(id)
     article.status = "published"
@@ -138,13 +164,13 @@ def publish(id):
     get_db_article_by_slug.cache_clear()
 
     flash(f'Article "{article.title}" published', "success")
-    return redirect(url_for("admin.list"))
+    return redirect(url_for("admin.articles"))
 
 
 @bp.route("/articles/<int:id>/unpublish", methods=["POST"])
 @login_required
 @csrf_protected
-def unpublish(id):
+def unpublish_article(id):
     """Unpublish an article (set status to draft)."""
     article = Article.query.get_or_404(id)
     article.status = "draft"
@@ -154,7 +180,7 @@ def unpublish(id):
     get_db_article_by_slug.cache_clear()
 
     flash(f'Article "{article.title}" unpublished', "success")
-    return redirect(url_for("admin.list"))
+    return redirect(url_for("admin.articles"))
 
 
 @bp.route("/articles/<int:id>/toggle-status", methods=["POST"])
@@ -171,4 +197,4 @@ def toggle_status(id):
     get_db_article_by_slug.cache_clear()
 
     flash(f'Article status changed to "{article.status}"', "success")
-    return redirect(url_for("admin.list"))
+    return redirect(url_for("admin.articles"))
