@@ -40,3 +40,5 @@ def index():
 
 
 from . import routes
+from . import todo_admin
+from . import user_admin
