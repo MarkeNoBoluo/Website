@@ -1,23 +1,73 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <h1>Admin Panel</h1>
+            </div>
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="{{ url_for('admin.index') }}" class="{% if request.endpoint == 'admin.index' %}active{% endif %}">
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin.articles') }}" class="{% if request.endpoint and 'admin.article' in request.endpoint %}active{% endif %}">
+                        Articles
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin.todos') }}" class="{% if request.endpoint and 'admin.todo' in request.endpoint %}active{% endif %}">
+                        Todos
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin.users') }}" class="{% if request.endpoint and 'admin.user' in request.endpoint %}active{% endif %}">
+                        Users
+                    </a>
+                </li>
+            </ul>
+        </aside>
 
-{% block title %}Admin - {% block admin_title %}{% endblock %}{% endblock %}
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="breadcrumbs">
+                    <a href="{{ url_for('admin.index') }}">Dashboard</a>
+                    {% block breadcrumbs %}{% endblock %}
+                </div>
+                <div class="user-info">
+                    <span>{{ session.get('username', 'User') }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">Logout</a>
+                </div>
+            </div>
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
-{% endblock %}
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endwith %}
 
-{% block content %}
-<div class="admin-container">
-    <div class="admin-header">
-        <h1>{% block admin_heading %}{% endblock %}</h1>
-        <nav class="admin-nav">
-            {% block admin_nav %}
-            <a href="{{ url_for('admin.list') }}">Articles</a>
-            <a href="{{ url_for('admin.create') }}">New Article</a>
-            {% endblock %}
-        </nav>
+            <!-- Page Content -->
+            {% block content %}{% endblock %}
+        </main>
     </div>
 
-    {% block admin_content %}{% endblock %}
-</div>
-{% endblock %}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
