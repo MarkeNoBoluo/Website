@@ -1,47 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Page Not Found - Blog{% endblock %}
+{% block title %}404 – Page Not Found{% endblock %}
 
 {% block content %}
-<div class="error-page">
-    <div class="error-content">
-        <h1>404</h1>
-        <h2>Page Not Found</h2>
-
-        <p class="error-message">
-            The page you're looking for doesn't exist or has been moved.
-        </p>
-
-        <div class="error-actions">
-            <a href="{{ url_for('blog.index') }}" class="btn btn-primary">
-                Back to Blog
-            </a>
-            <a href="{{ url_for('index') }}" class="btn btn-secondary">
-                Go Home
-            </a>
-        </div>
-
-        {% if recommendations %}
-        <div class="recommendations">
-            <h3>You might like these articles:</h3>
-            <div class="recommendation-list">
-                {% for article in recommendations %}
-                <div class="recommendation-item">
-                    <h4>
-                        <a href="{{ url_for('blog.article_detail', slug=article.slug) }}">
-                            {{ article.title }}
-                        </a>
-                    </h4>
-                    <p class="recommendation-excerpt">
-                        {{ article.excerpt|default('') }}
-                    </p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
+<div class="t-error-page">
+    <span class="t-error-code">404</span>
+    <p class="t-error-msg">// page not found</p>
+    <div class="t-error-actions">
+        <a href="{{ url_for('blog.index') }}" class="t-btn-outline">[ → ARTICLES ]</a>
+        <a href="{{ url_for('index') }}" class="t-btn-outline">[ → HOME ]</a>
     </div>
 </div>
 {% endblock %}
-
-{% block extra_css %}{% endblock %}
