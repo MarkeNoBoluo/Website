@@ -1,38 +1,38 @@
 {% extends "admin/base.html" %}
 
-{% block title %}New User - Admin{% endblock %}
+{% block title %}新建用户 - 管理后台{% endblock %}
 
 {% block breadcrumbs %}
     <span>&gt;</span>
-    <span>Users</span>
+    <span>用户</span>
     <span>&gt;</span>
-    <span>New</span>
+    <span>新建</span>
 {% endblock %}
 
 {% block content %}
-<h2 style="margin-bottom: 1.5rem;">New User</h2>
+<h2 style="margin-bottom: 1.5rem;">新建用户</h2>
 
 <form method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    
+
     <div class="form-group">
-        <label>Username</label>
+        <label>用户名</label>
         <input type="text" name="username" class="form-control" required value="{{ form_data.username if form_data else '' }}">
     </div>
-    
+
     <div class="form-group">
-        <label>Password</label>
+        <label>密码</label>
         <input type="password" name="password" class="form-control" required>
     </div>
-    
+
     <div class="form-group">
-        <label>Confirm Password</label>
+        <label>确认密码</label>
         <input type="password" name="confirm_password" class="form-control" required>
     </div>
-    
+
     <div style="display: flex; gap: 1rem;">
-        <button type="submit" class="btn btn-primary">Create User</button>
-        <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">创建用户</button>
+        <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">取消</a>
     </div>
 </form>
 {% endblock %}

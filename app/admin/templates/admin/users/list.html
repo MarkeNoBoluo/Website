@@ -1,29 +1,29 @@
 {% extends "admin/base.html" %}
 
-{% block title %}Users - Admin{% endblock %}
+{% block title %}用户 - 管理后台{% endblock %}
 
 {% block breadcrumbs %}
     <span>&gt;</span>
-    <span>Users</span>
+    <span>用户</span>
 {% endblock %}
 
 {% block content %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    <h2>Users</h2>
-    <a href="{{ url_for('admin.create_user') }}" class="btn btn-primary">New User</a>
+    <h2>用户</h2>
+    <a href="{{ url_for('admin.create_user') }}" class="btn btn-primary">新建用户</a>
 </div>
 
 <!-- Toolbar -->
 <form method="GET" class="toolbar">
     <div class="search-box">
-        <input type="text" name="search" placeholder="Search username..." value="{{ search }}">
+        <input type="text" name="search" placeholder="搜索用户名..." value="{{ search }}">
     </div>
     <select name="sort" class="form-control" style="width: auto;">
-        <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Joined Date</option>
-        <option value="username" {% if sort_by == 'username' %}selected{% endif %}>Username</option>
+        <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>注册时间</option>
+        <option value="username" {% if sort_by == 'username' %}selected{% endif %}>用户名</option>
     </select>
-    <button type="submit" class="btn btn-secondary">Filter</button>
-    <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">Reset</a>
+    <button type="submit" class="btn btn-secondary">筛选</button>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">重置</a>
 </form>
 
 <!-- Users Table -->
@@ -31,9 +31,9 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>Username</th>
-            <th>Joined</th>
-            <th>Actions</th>
+            <th>用户名</th>
+            <th>注册时间</th>
+            <th>操作</th>
         </tr>
     </thead>
     <tbody>
@@ -43,19 +43,19 @@
             <td>{{ user.username }}</td>
             <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
             <td class="actions">
-                <a href="{{ url_for('admin.edit_user', id=user.id) }}" class="btn btn-secondary">Edit</a>
-                <a href="{{ url_for('admin.change_password', id=user.id) }}" class="btn btn-secondary">Password</a>
+                <a href="{{ url_for('admin.edit_user', id=user.id) }}" class="btn btn-secondary">编辑</a>
+                <a href="{{ url_for('admin.change_password', id=user.id) }}" class="btn btn-secondary">密码</a>
                 {% if user.id != session.get('user_id') %}
-                <form method="POST" action="{{ url_for('admin.delete_user', id=user.id) }}" style="display: inline;" onsubmit="return confirm('Delete this user?');">
+                <form method="POST" action="{{ url_for('admin.delete_user', id=user.id) }}" style="display: inline;" onsubmit="return confirm('确认删除此用户？');">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">删除</button>
                 </form>
                 {% endif %}
             </td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="4" style="text-align: center; color: var(--text-secondary);">No users found.</td>
+            <td colspan="4" style="text-align: center; color: var(--text-secondary);">暂无用户</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -65,13 +65,13 @@
 {% if pagination.pages > 1 %}
 <div class="pagination">
     {% if pagination.has_prev %}
-    <a href="{{ url_for('admin.users', page=pagination.prev_num, search=search, sort=sort_by) }}">&laquo; Prev</a>
+    <a href="{{ url_for('admin.users', page=pagination.prev_num, search=search, sort=sort_by) }}">&laquo; 上一页</a>
     {% endif %}
     {% for p in range(1, pagination.pages + 1) %}
     <a href="{{ url_for('admin.users', page=p, search=search, sort=sort_by) }}" class="{% if p == pagination.page %}active{% endif %}">{{ p }}</a>
     {% endfor %}
     {% if pagination.has_next %}
-    <a href="{{ url_for('admin.users', page=pagination.next_num, search=search, sort=sort_by) }}">Next &raquo;</a>
+    <a href="{{ url_for('admin.users', page=pagination.next_num, search=search, sort=sort_by) }}">下一页 &raquo;</a>
     {% endif %}
 </div>
 {% endif %}

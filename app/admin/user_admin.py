@@ -32,7 +32,7 @@ def users():
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
     return render_template(
-        "users/list.html",
+        "admin/users/list.html",
         users=pagination.items,
         pagination=pagination,
         search=search,
@@ -50,25 +50,25 @@ def create_user():
         confirm_password = request.form.get("confirm_password", "")
 
         if not username or not password:
-            flash("Username and password are required", "error")
-            return render_template("users/create.html", form_data=request.form)
+            flash("用户名和密码不能为空", "error")
+            return render_template("admin/users/create.html", form_data=request.form)
 
         if password != confirm_password:
-            flash("Passwords do not match", "error")
-            return render_template("users/create.html", form_data=request.form)
+            flash("两次密码不一致", "error")
+            return render_template("admin/users/create.html", form_data=request.form)
 
         if User.query.filter_by(username=username).first():
-            flash("Username already exists", "error")
-            return render_template("users/create.html", form_data=request.form)
+            flash("用户名已存在", "error")
+            return render_template("admin/users/create.html", form_data=request.form)
 
         user = User(username=username, password_hash=hash_password(password))
         db.session.add(user)
         db.session.commit()
 
-        flash(f'User "{username}" created successfully', "success")
+        flash(f'用户「{username}」创建成功', "success")
         return redirect(url_for("admin.users"))
 
-    return render_template("users/create.html")
+    return render_template("admin/users/create.html")
 
 
 @bp.route("/users/<int:id>/edit", methods=["GET", "POST"])
@@ -81,22 +81,22 @@ def edit_user(id):
         username = request.form.get("username", "").strip()
 
         if not username:
-            flash("Username is required", "error")
-            return render_template("users/edit.html", user=user, form_data=request.form)
+            flash("用户名不能为空", "error")
+            return render_template("admin/users/edit.html", user=user, form_data=request.form)
 
         # Check if username is taken by another user
         existing = User.query.filter(User.username == username, User.id != id).first()
         if existing:
             flash("Username already exists", "error")
-            return render_template("users/edit.html", user=user, form_data=request.form)
+            return render_template("admin/users/edit.html", user=user, form_data=request.form)
 
         user.username = username
         db.session.commit()
 
-        flash(f'User "{username}" updated successfully', "success")
+        flash(f'用户「{username}」更新成功', "success")
         return redirect(url_for("admin.users"))
 
-    return render_template("users/edit.html", user=user)
+    return render_template("admin/users/edit.html", user=user)
 
 
 @bp.route("/users/<int:id>/password", methods=["GET", "POST"])
@@ -112,24 +112,24 @@ def change_password(id):
 
         # Verify current user or admin
         if not check_password(user.password_hash, current_password):
-            flash("Current password is incorrect", "error")
-            return render_template("users/password.html", user=user)
+            flash("当前密码不正确", "error")
+            return render_template("admin/users/password.html", user=user)
 
         if new_password != confirm_password:
-            flash("New passwords do not match", "error")
-            return render_template("users/password.html", user=user)
+            flash("两次新密码不一致", "error")
+            return render_template("admin/users/password.html", user=user)
 
         if len(new_password) < 6:
-            flash("Password must be at least 6 characters", "error")
-            return render_template("users/password.html", user=user)
+            flash("密码至少需要6个字符", "error")
+            return render_template("admin/users/password.html", user=user)
 
         user.password_hash = hash_password(new_password)
         db.session.commit()
 
-        flash("Password changed successfully", "success")
+        flash("密码修改成功", "success")
         return redirect(url_for("admin.users"))
 
-    return render_template("users/password.html", user=user)
+    return render_template("admin/users/password.html", user=user)
 
 
 @bp.route("/users/<int:id>/delete", methods=["POST"])
@@ -141,12 +141,12 @@ def delete_user(id):
 
     # Prevent self-deletion
     if user.id == session.get("user_id"):
-        flash("You cannot delete yourself", "error")
+        flash("不能删除自己的账户", "error")
         return redirect(url_for("admin.users"))
 
     username = user.username
     db.session.delete(user)
     db.session.commit()
 
-    flash(f'User "{username}" deleted successfully', "success")
+    flash(f'用户「{username}」已删除', "success")
     return redirect(url_for("admin.users"))
