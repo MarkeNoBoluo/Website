@@ -1,31 +1,31 @@
 {% extends "admin/base.html" %}
 
-{% block title %}Dashboard - Admin{% endblock %}
+{% block title %}控制台 - 管理后台{% endblock %}
 
 {% block breadcrumbs %}
     <span>&gt;</span>
-    <span>Dashboard</span>
+    <span>控制台</span>
 {% endblock %}
 
 {% block content %}
-<h2 style="margin-bottom: 1.5rem;">Dashboard</h2>
+<h2 style="margin-bottom: 1.5rem;">控制台</h2>
 
 <!-- Statistics Cards -->
 <div class="stats-grid">
     <div class="stat-card">
-        <h3>Total Articles</h3>
+        <h3>文章总数</h3>
         <div class="value">{{ stats.total_articles }}</div>
     </div>
     <div class="stat-card">
-        <h3>Published</h3>
+        <h3>已发布</h3>
         <div class="value">{{ stats.published_articles }}</div>
     </div>
     <div class="stat-card">
-        <h3>Total Todos</h3>
+        <h3>待办总数</h3>
         <div class="value">{{ stats.total_todos }}</div>
     </div>
     <div class="stat-card">
-        <h3>Total Users</h3>
+        <h3>用户总数</h3>
         <div class="value">{{ stats.total_users }}</div>
     </div>
 </div>
@@ -34,14 +34,14 @@
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
     <!-- Recent Articles -->
     <div class="card">
-        <h3 style="margin-bottom: 1rem;">Recent Drafts</h3>
+        <h3 style="margin-bottom: 1rem;">最近草稿</h3>
         {% if recent_drafts %}
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>标题</th>
+                    <th>状态</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,27 +50,27 @@
                     <td>{{ article.title }}</td>
                     <td><span class="badge badge-draft">{{ article.status }}</span></td>
                     <td class="actions">
-                        <a href="{{ url_for('admin.edit_article', id=article.id) }}" class="btn btn-secondary">Edit</a>
+                        <a href="{{ url_for('admin.edit_article', id=article.id) }}" class="btn btn-secondary">编辑</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <p style="color: var(--text-secondary);">No draft articles.</p>
+        <p style="color: var(--text-secondary);">暂无草稿文章</p>
         {% endif %}
     </div>
 
     <!-- Recent Todos -->
     <div class="card">
-        <h3 style="margin-bottom: 1rem;">Recent Todos</h3>
+        <h3 style="margin-bottom: 1rem;">最近待办</h3>
         {% if recent_todos %}
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Quadrant</th>
-                    <th>Actions</th>
+                    <th>标题</th>
+                    <th>象限</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,21 +79,21 @@
                     <td>{{ todo.title }}</td>
                     <td><span class="badge quadrant-{{ todo.quadrant }}">Q{{ todo.quadrant }}</span></td>
                     <td class="actions">
-                        <a href="{{ url_for('admin.edit_todo', id=todo.id) }}" class="btn btn-secondary">Edit</a>
+                        <a href="{{ url_for('admin.edit_todo', id=todo.id) }}" class="btn btn-secondary">编辑</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <p style="color: var(--text-secondary);">No todos.</p>
+        <p style="color: var(--text-secondary);">暂无待办事项</p>
         {% endif %}
     </div>
 </div>
 
 <div style="margin-top: 1.5rem;">
-    <a href="{{ url_for('admin.articles') }}" class="btn btn-primary">Manage Articles</a>
-    <a href="{{ url_for('admin.todos') }}" class="btn btn-primary">Manage Todos</a>
-    <a href="{{ url_for('admin.users') }}" class="btn btn-primary">Manage Users</a>
+    <a href="{{ url_for('admin.articles') }}" class="btn btn-primary">管理文章</a>
+    <a href="{{ url_for('admin.todos') }}" class="btn btn-primary">管理待办</a>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-primary">管理用户</a>
 </div>
 {% endblock %}

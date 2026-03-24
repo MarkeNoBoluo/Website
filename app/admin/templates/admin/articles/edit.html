@@ -1,41 +1,41 @@
 {% extends "admin/base.html" %}
 
-{% block title %}Edit Article - Admin{% endblock %}
+{% block title %}编辑文章 - 管理后台{% endblock %}
 
 {% block breadcrumbs %}
     <span>&gt;</span>
-    <span>Articles</span>
+    <span>文章</span>
     <span>&gt;</span>
-    <span>Edit</span>
+    <span>编辑</span>
 {% endblock %}
 
 {% block content %}
-<h2 style="margin-bottom: 1.5rem;">Edit Article</h2>
+<h2 style="margin-bottom: 1.5rem;">编辑文章</h2>
 
 <form method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     
     <div class="form-group">
-        <label>Title</label>
+        <label>标题</label>
         <input type="text" name="title" class="form-control" required value="{{ article.title }}">
     </div>
     
     <div class="form-group">
-        <label>Content (Markdown)</label>
+        <label>内容（Markdown）</label>
         <textarea name="content" class="form-control" rows="15">{{ article.content }}</textarea>
     </div>
     
     <div class="form-group">
-        <label>Status</label>
+        <label>状态</label>
         <select name="status" class="form-control" style="width: auto;">
-            <option value="draft" {% if article.status == 'draft' %}selected{% endif %}>Draft</option>
-            <option value="published" {% if article.status == 'published' %}selected{% endif %}>Published</option>
+            <option value="draft" {% if article.status == 'draft' %}selected{% endif %}>草稿</option>
+            <option value="published" {% if article.status == 'published' %}selected{% endif %}>已发布</option>
         </select>
     </div>
     
     <div style="display: flex; gap: 1rem;">
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="{{ url_for('admin.articles') }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">保存修改</button>
+        <a href="{{ url_for('admin.articles') }}" class="btn btn-secondary">取消</a>
     </div>
 </form>
 {% endblock %}

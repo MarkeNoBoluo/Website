@@ -74,7 +74,7 @@ def create_article():
         status = request.form.get("status", "draft")
 
         if not title:
-            flash("Title is required", "error")
+            flash("标题不能为空", "error")
             return render_template("admin/articles/create.html", form_data=request.form)
 
         slug = generate_slug(title)
@@ -91,7 +91,7 @@ def create_article():
         get_db_articles.cache_clear()
         get_db_article_by_slug.cache_clear()
 
-        flash(f'Article "{title}" created successfully', "success")
+        flash(f'文章《{title}》创建成功', "success")
         return redirect(url_for("admin.articles"))
 
     return render_template("admin/articles/create.html")
@@ -110,7 +110,7 @@ def edit_article(id):
         status = request.form.get("status", "draft")
 
         if not title:
-            flash("Title is required", "error")
+            flash("标题不能为空", "error")
             return render_template(
                 "admin/articles/edit.html", article=article, form_data=request.form
             )
@@ -127,7 +127,7 @@ def edit_article(id):
         get_db_articles.cache_clear()
         get_db_article_by_slug.cache_clear()
 
-        flash(f'Article "{title}" updated successfully', "success")
+        flash(f'文章《{title}》更新成功', "success")
         return redirect(url_for("admin.articles"))
 
     return render_template("admin/articles/edit.html", article=article)
@@ -147,7 +147,7 @@ def delete_article(id):
     get_db_articles.cache_clear()
     get_db_article_by_slug.cache_clear()
 
-    flash(f'Article "{title}" deleted successfully', "success")
+    flash(f'文章《{title}》已删除', "success")
     return redirect(url_for("admin.articles"))
 
 
@@ -163,7 +163,7 @@ def publish_article(id):
     get_db_articles.cache_clear()
     get_db_article_by_slug.cache_clear()
 
-    flash(f'Article "{article.title}" published', "success")
+    flash(f'文章《{article.title}》已发布', "success")
     return redirect(url_for("admin.articles"))
 
 
@@ -179,7 +179,7 @@ def unpublish_article(id):
     get_db_articles.cache_clear()
     get_db_article_by_slug.cache_clear()
 
-    flash(f'Article "{article.title}" unpublished', "success")
+    flash(f'文章《{article.title}》已下线', "success")
     return redirect(url_for("admin.articles"))
 
 
@@ -196,5 +196,5 @@ def toggle_status(id):
     get_db_articles.cache_clear()
     get_db_article_by_slug.cache_clear()
 
-    flash(f'Article status changed to "{article.status}"', "success")
+    flash(f'文章状态已切换为「{article.status}」', "success")
     return redirect(url_for("admin.articles"))

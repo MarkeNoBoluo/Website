@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <title>{% block title %}管理后台{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
@@ -12,27 +12,27 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <h1>Admin Panel</h1>
+                <h1>管理后台</h1>
             </div>
             <ul class="sidebar-nav">
                 <li>
                     <a href="{{ url_for('admin.index') }}" class="{% if request.endpoint == 'admin.index' %}active{% endif %}">
-                        Dashboard
+                        控制台
                     </a>
                 </li>
                 <li>
                     <a href="{{ url_for('admin.articles') }}" class="{% if request.endpoint and 'admin.article' in request.endpoint %}active{% endif %}">
-                        Articles
+                        文章
                     </a>
                 </li>
                 <li>
                     <a href="{{ url_for('admin.todos') }}" class="{% if request.endpoint and 'admin.todo' in request.endpoint %}active{% endif %}">
-                        Todos
+                        待办事项
                     </a>
                 </li>
                 <li>
                     <a href="{{ url_for('admin.users') }}" class="{% if request.endpoint and 'admin.user' in request.endpoint %}active{% endif %}">
-                        Users
+                        用户
                     </a>
                 </li>
             </ul>
@@ -43,12 +43,12 @@
             <!-- Top Bar -->
             <div class="top-bar">
                 <div class="breadcrumbs">
-                    <a href="{{ url_for('admin.index') }}">Dashboard</a>
+                    <a href="{{ url_for('admin.index') }}">控制台</a>
                     {% block breadcrumbs %}{% endblock %}
                 </div>
                 <div class="user-info">
                     <span>{{ session.get('username', 'User') }}</span>
-                    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">Logout</a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">退出</a>
                 </div>
             </div>
 
