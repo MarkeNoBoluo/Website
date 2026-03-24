@@ -5,7 +5,7 @@ from flask import Blueprint, render_template
 from ..auth.utils import login_required
 
 bp = Blueprint(
-    "admin", __name__, url_prefix="/admin", template_folder="templates/admin"
+    "admin", __name__, url_prefix="/admin", template_folder="templates"
 )
 
 
@@ -32,7 +32,7 @@ def index():
     recent_todos = Todo.query.order_by(Todo.updated_at.desc()).limit(5).all()
 
     return render_template(
-        "dashboard.html",
+        "admin/dashboard.html",
         stats=stats,
         recent_drafts=recent_drafts,
         recent_todos=recent_todos,

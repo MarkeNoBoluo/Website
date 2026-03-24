@@ -23,7 +23,7 @@ def login():
             session['username'] = user['username']
             flash(f'Welcome back, {user["username"]}!', 'success')
             # Redirect to todo matrix after login
-            return redirect(url_for('todo.index'))
+            return redirect(url_for('index'))
         else:
             flash('Invalid username or password. Please try again.', 'error')
             # Re-render form with error

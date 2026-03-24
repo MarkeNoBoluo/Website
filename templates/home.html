@@ -35,7 +35,6 @@
   <a href="{{ url_for('index') }}" class="home-nav-logo">~/blog<span>$</span></a>
   <ul class="home-nav-links">
     <li><a href="{{ url_for('blog.index') }}">./articles</a></li>
-    <li><a href="{{ url_for('todo.index') }}">./matrix</a></li>
     {% if session.get('user_id') %}
       <li><span class="home-nav-user">[{{ session.get('username') }}]</span></li>
       <li><a href="{{ url_for('auth.logout') }}">./logout</a></li>
@@ -60,7 +59,6 @@
   </div>
   <div class="home-hero-actions">
     <a href="{{ url_for('blog.index') }}" class="home-btn">[ READ ARTICLES ]</a>
-    <a href="{{ url_for('todo.index') }}" class="home-btn home-btn-sec">[ TASK MATRIX ]</a>
   </div>
 </section>
 
