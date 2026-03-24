@@ -5,12 +5,10 @@
 {% block content %}
 <article class="article-detail">
     <header class="article-header">
+        <div class="t-prompt">[root@raspberrypi articles]$</div>
         <h1 class="article-title">{{ article.title }}</h1>
-
         <div class="article-meta">
-            <time datetime="{{ article.date.isoformat() }}">
-                {{ article.date.strftime('%B %d, %Y') }}
-            </time>
+            <span class="meta-bracket">[</span>{{ article.date.strftime('%Y-%m-%d') }}<span class="meta-bracket">]</span>
         </div>
     </header>
 
@@ -20,10 +18,8 @@
 
     <footer class="article-footer">
         <a href="{{ url_for('blog.index') }}" class="back-to-blog">
-            ← Back to all articles
+            ← back to ./articles
         </a>
     </footer>
 </article>
 {% endblock %}
-
-{% block extra_css %}{% endblock %}
