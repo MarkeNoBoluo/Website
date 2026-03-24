@@ -1,51 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Blog Articles{% endblock %}
+{% block title %}Articles{% endblock %}
 
 {% block content %}
-<div class="blog-header">
-    <h1>Blog Articles</h1>
-    <p class="subtitle">Latest thoughts and tutorials</p>
-</div>
+<div class="t-section-header">// ARTICLES</div>
 
 {% if articles %}
-    <div class="articles-grid">
-        {% for article in articles %}
-        <article class="article-card">
-            <div class="card-content">
-                <h2 class="article-title">
-                    <a href="{{ url_for('blog.article_detail', slug=article.slug) }}">
-                        {{ article.title }}
-                    </a>
-                </h2>
-
-                <div class="article-meta">
-                    <time datetime="{{ article.date.isoformat() }}">
-                        {{ article.date.strftime('%B %d, %Y') }}
-                    </time>
-                </div>
-
-                {% if article.excerpt %}
-                <div class="article-excerpt">
-                    <p>{{ article.excerpt }}</p>
-                </div>
-                {% endif %}
-
-                <div class="article-actions">
-                    <a href="{{ url_for('blog.article_detail', slug=article.slug) }}"
-                       class="read-more">
-                        Read more →
-                    </a>
-                </div>
-            </div>
-        </article>
-        {% endfor %}
-    </div>
+<div class="t-article-list">
+  {% for article in articles %}
+  <a href="{{ url_for('blog.article_detail', slug=article.slug) }}" class="t-article-row">
+    <span class="t-article-date"><span>[</span>{{ article.date.strftime('%Y-%m-%d') }}<span>]</span></span>
+    <span class="t-article-title">{{ article.title }}</span>
+    <span class="t-article-tag">md</span>
+  </a>
+  {% endfor %}
+</div>
 {% else %}
-    <div class="no-articles">
-        <p>No articles yet. Check back soon!</p>
-    </div>
+<p class="t-empty">// no articles yet — check back soon</p>
 {% endif %}
 {% endblock %}
-
-{% block extra_css %}{% endblock %}
