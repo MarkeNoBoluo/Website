@@ -1,109 +1,77 @@
 ---
-phase: 05-blog-management
-plan: '04'
-subsystem: ui
-tags: [css, dark-theme, login, admin, styling]
-
-# Dependency graph
-requires:
-  - phase: 03-blog-articles-dark-theme
-    provides: Dark theme CSS variables and base styles
-provides:
-  - Unified login page with dark theme
-  - Admin CSS with comprehensive dark theme styles
-  - Admin templates following dark theme patterns
-affects: [05-blog-management, auth, admin]
-
-# Tech tracking
-tech-stack:
-  added: [admin.css]
-  patterns: [CSS variables for theming, consistent button hierarchy, card-based layouts]
-
-key-files:
+phase: "05"
+plan: "04"
+subsystem: ui-styling
+tags: [css, dark-theme, admin, login, terminal]
+dependency_graph:
+  requires: [05-01, 05-02, 05-03]
+  provides: [admin-dark-theme, login-flash-messages]
+  affects: [app/auth/templates/auth/login.html, static/css/admin.css, app/admin/templates/admin/base.html]
+tech_stack:
+  added: []
+  patterns: [terminal-css-variables, dark-theme-consistency]
+key_files:
   created:
-    - app/static/css/admin.css
-    - app/admin/templates/admin/base.html
-    - app/admin/templates/admin/list.html
-    - app/admin/templates/admin/form.html
+    - static/css/admin.css
   modified:
     - app/auth/templates/auth/login.html
-
-key-decisions:
-  - "Login page includes admin.css for consistent dark theme styles"
-  - "Admin templates created as placeholders for future admin blueprint"
-  - "Flash messages show all categories (not just errors) for better UX"
-
-patterns-established:
-  - "Button hierarchy: primary (blue), secondary (gray), danger (red), success (green), warning (orange)"
-  - "Card-based layouts with consistent border-radius (8px) and shadows"
-  - "Form inputs with dark theme focus states"
-
-requirements-completed: []
-
-# Metrics
-duration: 5min
-completed: 2026-03-21
+    - app/admin/templates/admin/base.html
+decisions:
+  - Admin CSS uses same terminal variables as style.css for visual consistency
+  - Admin base is standalone HTML so fonts loaded via Google Fonts CDN
+  - Login page preserves terminal theme classes, only adds flash messages block
+metrics:
+  duration_minutes: 59
+  completed_date: "2026-03-24"
+  tasks_completed: 3
+  tasks_total: 3
+  files_modified: 3
 ---
 
-# Phase 05: Blog Management - Plan 04 Summary
+# Phase 05 Plan 04: UI Dark Theme Unification Summary
 
-**Unified login page and admin pages with consistent dark theme styling using CSS variables**
+**One-liner:** Terminal dark theme admin.css with #080808 background, green/amber accents replacing light admin styles; login page gains flash message rendering.
 
-## Performance
+## Tasks Completed
 
-- **Duration:** 5 min
-- **Started:** 2026-03-20T15:59:47Z
-- **Completed:** 2026-03-21T00:02:00Z
-- **Tasks:** 3 completed
-- **Files modified:** 5 (1 modified, 4 created)
+| Task | Name | Commit | Files |
+|------|------|--------|-------|
+| 1 | Add flash messages to login page | a3bb5b6 | app/auth/templates/auth/login.html |
+| 2 | Rewrite admin.css with dark terminal theme | c5fa2cf | static/css/admin.css |
+| 3 | Add terminal fonts to admin base template | f0cf9bf | app/admin/templates/admin/base.html |
 
-## Accomplishments
-- Updated login page with login-card wrapper and consistent dark theme
-- Created comprehensive admin.css with all admin-specific styles
-- Created admin templates (base, list, form) with proper CSS includes
+## What Was Built
 
-## Task Commits
+- **admin.css** completely rewritten (582 lines): dark terminal aesthetic using green #00ff41, amber #ffb300, red #ff2244 on bg-primary #080808. Covers sidebar layout, top bar, flash messages, stat cards, data tables, all button variants, badges, forms, editor layout with markdown preview pane, modal dialog, article cards, filter buttons, responsive breakpoints.
 
-Each task was committed atomically:
+- **login.html** flash messages: added get_flashed_messages block inside .t-auth-box, rendering .flash.success/.error/.warning divs consistent with global style.css.
 
-1. **Task 1: Audit and update login page** - `704cdac` (feat)
-2. **Task 2: Create admin.css** - `daca9b1` (feat)
-3. **Task 3: Create admin templates** - `e643a9e` (feat)
-
-**Plan metadata:** `docs(05-04): complete UI unification plan` (to be added)
-
-## Files Created/Modified
-
-- `app/auth/templates/auth/login.html` - Updated with login-card wrapper, autocomplete attributes, flash message categories
-- `app/static/css/admin.css` - Comprehensive dark theme styles for admin and login pages (489 lines)
-- `app/admin/templates/admin/base.html` - Admin base template with admin.css include
-- `app/admin/templates/admin/list.html` - Article list with filter buttons and action buttons
-- `app/admin/templates/admin/form.html` - Article form with markdown editor layout and preview
-
-## Decisions Made
-
-- Login page includes admin.css for consistent dark theme styling
-- Flash messages show all categories (success, error, warning, info) instead of just errors
-- Admin templates created as placeholder structure for future admin blueprint implementation
+- **admin/base.html** font loading: added Google Fonts preconnect + link for Share Tech Mono and VT323 so terminal fonts render in standalone admin dashboard.
 
 ## Deviations from Plan
 
-None - plan executed exactly as written.
+**1. [Rule 2 - Missing] Terminal fonts not loaded in admin**
+- Found during: Task 3
+- Issue: Admin base.html is standalone HTML not extending public base.html. Without loading fonts, VT323 and Share Tech Mono would fall back to Courier New.
+- Fix: Added Google Fonts link for Share Tech Mono and VT323.
+- Files: app/admin/templates/admin/base.html
+- Commit: f0cf9bf
 
-## Issues Encountered
+**2. [Rule 1 - Bug] admin.css file location mismatch**
+- Found during: Task 2
+- Issue: Plan specified app/static/css/admin.css but app was restructured. Static files served from static/css/ (top-level).
+- Fix: Wrote admin.css to static/css/admin.css (the actual serving location).
+- Files: static/css/admin.css
+- Commit: c5fa2cf
 
-None - all tasks completed successfully.
+## Verification
 
-## User Setup Required
+- App creates OK, routes resolve correctly
+- 19 unit tests passed
 
-None - no external service configuration required.
+## Self-Check: PASSED
 
-## Next Phase Readiness
-
-- Admin templates created and ready for admin blueprint implementation
-- Login page styled and ready for use
-- All dark theme CSS variables in place from previous phases
-
----
-*Phase: 05-blog-management*
-*Completed: 2026-03-21*
+- static/css/admin.css: FOUND
+- app/auth/templates/auth/login.html: FOUND
+- app/admin/templates/admin/base.html: FOUND
+- Commits a3bb5b6, c5fa2cf, f0cf9bf: all confirmed in git log

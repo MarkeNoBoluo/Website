@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-03 plan
-last_updated: "2026-03-20T16:24:58.766Z"
+stopped_at: Completed 05-04-PLAN.md
+last_updated: "2026-03-24T06:09:06.795Z"
 progress:
   total_phases: 5
   completed_phases: 5
@@ -37,6 +37,7 @@ Plan: 3 of 4 (05-01, 05-02, 05-03 complete)
 - Debounced preview updates (300ms) to reduce server load
 - Public blog routes filter by status='published', drafts return 404
 - Cache invalidation on article changes via lru_cache.cache_clear()
+- [Phase 05]: Admin CSS uses terminal variables (--green, --amber on #080808) matching public site style.css
 
 ## Accumulated Context
 
@@ -64,8 +65,8 @@ Plan: 3 of 4 (05-01, 05-02, 05-03 complete)
 
 ## Session Continuity
 
-Last session: 2026-03-20T16:14:52.295Z
-Stopped at: Completed 05-03 plan
+Last session: 2026-03-24T06:09:06.792Z
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None
 
 ---
