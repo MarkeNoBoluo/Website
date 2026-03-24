@@ -137,4 +137,13 @@ def create_app(config_class=Config):
         # 对于非博客 URL，返回简单 404
         return render_template("errors/404.html"), 404
 
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        """500 Internal Server Error handler."""
+        # Try to get the original exception message if available
+        error_message = str(error)
+        if hasattr(error, "original_exception") and error.original_exception:
+            error_message = str(error.original_exception)
+        return render_template("errors/500.html", error=error_message), 500
+
     return app
