@@ -35,7 +35,7 @@ def todos():
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
     return render_template(
-        "todos/list.html",
+        "admin/todos/list.html",
         todos=pagination.items,
         pagination=pagination,
         search=search,
@@ -44,7 +44,7 @@ def todos():
     )
 
 
-@bp.route("/todos/new", methods=["GET", "POST"])
+@bp.route("admin//todos/new", methods=["GET", "POST"])
 @login_required
 @csrf_protected
 def create_todo():
@@ -56,8 +56,8 @@ def create_todo():
         priority = request.form.get("priority", 3, type=int)
 
         if not title:
-            flash("Title is required", "error")
-            return render_template("todos/create.html", form_data=request.form)
+            flash("标题不能为空", "error")
+            return render_template("admin/todos/create.html", form_data=request.form)
 
         todo = Todo(
             user_id=session.get("user_id"),
@@ -69,10 +69,10 @@ def create_todo():
         db.session.add(todo)
         db.session.commit()
 
-        flash(f'Todo "{title}" created successfully', "success")
+        flash(f'待办《{title}》创建成功', "success")
         return redirect(url_for("admin.todos"))
 
-    return render_template("todos/create.html")
+    return render_template("admin/todos/create.html")
 
 
 @bp.route("/todos/<int:id>/edit", methods=["GET", "POST"])
@@ -91,10 +91,10 @@ def edit_todo(id):
 
         db.session.commit()
 
-        flash(f'Todo "{todo.title}" updated successfully', "success")
+        flash(f'待办《{todo.title}》更新成功', "success")
         return redirect(url_for("admin.todos"))
 
-    return render_template("todos/edit.html", todo=todo)
+    return render_template("admin/todos/edit.html", todo=todo)
 
 
 @bp.route("/todos/<int:id>/delete", methods=["POST"])
@@ -108,7 +108,7 @@ def delete_todo(id):
     db.session.delete(todo)
     db.session.commit()
 
-    flash(f'Todo "{title}" deleted successfully', "success")
+    flash(f'待办《{title}》已删除', "success")
     return redirect(url_for("admin.todos"))
 
 
@@ -121,5 +121,8 @@ def complete_todo(id):
     todo.completed = not todo.completed
     db.session.commit()
 
-    flash(f"Todo marked as {'completed' if todo.completed else 'pending'}", "success")
+    if todo.completed:
+        flash("待办已标记为完成", "success")
+    else:
+        flash("待办已标记为未完成", "success")
     return redirect(url_for("admin.todos"))

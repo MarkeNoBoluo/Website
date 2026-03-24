@@ -1,47 +1,47 @@
 {% extends "admin/base.html" %}
 
-{% block title %}Todos - Admin{% endblock %}
+{% block title %}待办事项 - Admin{% endblock %}
 
 {% block breadcrumbs %}
     <span>&gt;</span>
-    <span>Todos</span>
+    <span>待办事项</span>
 {% endblock %}
 
 {% block content %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    <h2>Todos</h2>
-    <a href="{{ url_for('admin.create_todo') }}" class="btn btn-primary">New Todo</a>
+    <h2>待办事项</h2>
+    <a href="{{ url_for('admin.create_todo') }}" class="btn btn-primary">新建待办</a>
 </div>
 
 <form method="GET" class="toolbar">
     <div class="search-box">
-        <input type="text" name="search" placeholder="Search title..." value="{{ search }}">
+        <input type="text" name="search" placeholder="搜索标题..." value="{{ search }}">
     </div>
     <select name="quadrant" class="form-control" style="width: auto;">
-        <option value="all">All Quadrants</option>
-        <option value="1" {% if quadrant == '1' %}selected{% endif %}>Q1 - Urgent & Important</option>
-        <option value="2" {% if quadrant == '2' %}selected{% endif %}>Q2 - Important</option>
-        <option value="3" {% if quadrant == '3' %}selected{% endif %}>Q3 - Urgent</option>
-        <option value="4" {% if quadrant == '4' %}selected{% endif %}>Q4 - Neither</option>
+        <option value="all">全部象限</option>
+        <option value="1" {% if quadrant == '1' %}selected{% endif %}>Q1 - 紧急且重要</option>
+        <option value="2" {% if quadrant == '2' %}selected{% endif %}>Q2 - 重要不紧急</option>
+        <option value="3" {% if quadrant == '3' %}selected{% endif %}>Q3 - 紧急不重要</option>
+        <option value="4" {% if quadrant == '4' %}selected{% endif %}>Q4 - 不紧急不重要</option>
     </select>
     <select name="priority" class="form-control" style="width: auto;">
-        <option value="all">All Priorities</option>
+        <option value="all">全部优先级</option>
         {% for p in range(1, 6) %}
-        <option value="{{ p }}" {% if priority == p|string %}selected{% endif %}>Priority {{ p }}</option>
+        <option value="{{ p }}" {% if priority == p|string %}selected{% endif %}>优先级 {{ p }}</option>
         {% endfor %}
     </select>
-    <button type="submit" class="btn btn-secondary">Filter</button>
-    <a href="{{ url_for('admin.todos') }}" class="btn btn-secondary">Reset</a>
+    <button type="submit" class="btn btn-secondary">筛选</button>
+    <a href="{{ url_for('admin.todos') }}" class="btn btn-secondary">重置</a>
 </form>
 
 <table class="data-table">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Quadrant</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>标题</th>
+            <th>象限</th>
+            <th>优先级</th>
+            <th>状态</th>
+            <th>操作</th>
         </tr>
     </thead>
     <tbody>
@@ -54,26 +54,26 @@
             </td>
             <td>
                 {% if todo.completed %}
-                <span class="badge badge-published">Completed</span>
+                <span class="badge badge-published">已完成</span>
                 {% else %}
-                <span class="badge badge-draft">Pending</span>
+                <span class="badge badge-draft">进行中</span>
                 {% endif %}
             </td>
             <td class="actions">
-                <a href="{{ url_for('admin.edit_todo', id=todo.id) }}" class="btn btn-secondary">Edit</a>
+                <a href="{{ url_for('admin.edit_todo', id=todo.id) }}" class="btn btn-secondary">编辑</a>
                 <form method="POST" action="{{ url_for('admin.complete_todo', id=todo.id) }}" style="display: inline;">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <button type="submit" class="btn btn-success">{{ 'Uncomplete' if todo.completed else 'Complete' }}</button>
+                    <button type="submit" class="btn btn-success">{{ '标记未完成' if todo.completed else '标记完成' }}</button>
                 </form>
-                <form method="POST" action="{{ url_for('admin.delete_todo', id=todo.id) }}" style="display: inline;" onsubmit="return confirm('Delete this todo?');">
+                <form method="POST" action="{{ url_for('admin.delete_todo', id=todo.id) }}" style="display: inline;" onsubmit="return confirm('确认删除此待办？');">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">删除</button>
                 </form>
             </td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="5" style="text-align: center; color: var(--text-secondary);">No todos found.</td>
+            <td colspan="5" style="text-align: center; color: var(--text-secondary);">暂无待办事项</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -82,13 +82,13 @@
 {% if pagination.pages > 1 %}
 <div class="pagination">
     {% if pagination.has_prev %}
-    <a href="{{ url_for('admin.todos', page=pagination.prev_num, search=search, quadrant=quadrant, priority=priority) }}">&laquo; Prev</a>
+    <a href="{{ url_for('admin.todos', page=pagination.prev_num, search=search, quadrant=quadrant, priority=priority) }}">&laquo; 上一页</a>
     {% endif %}
     {% for p in range(1, pagination.pages + 1) %}
     <a href="{{ url_for('admin.todos', page=p, search=search, quadrant=quadrant, priority=priority) }}" class="{% if p == pagination.page %}active{% endif %}">{{ p }}</a>
     {% endfor %}
     {% if pagination.has_next %}
-    <a href="{{ url_for('admin.todos', page=pagination.next_num, search=search, quadrant=quadrant, priority=priority) }}">Next &raquo;</a>
+    <a href="{{ url_for('admin.todos', page=pagination.next_num, search=search, quadrant=quadrant, priority=priority) }}">下一页 &raquo;</a>
     {% endif %}
 </div>
 {% endif %}
