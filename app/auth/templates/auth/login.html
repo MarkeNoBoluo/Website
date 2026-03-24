@@ -2,48 +2,31 @@
 
 {% block title %}Login{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
-{% endblock %}
-
 {% block content %}
-<div class="login-container">
-    <div class="login-card">
-        <h1>Login</h1>
+<div class="t-auth-container">
+    <div class="t-auth-box">
+        <div class="t-section-header">// AUTH_LOGIN</div>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="flash {{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
-        <form method="POST" action="{{ url_for('auth.login') }}" class="login-form">
+        <form method="POST" action="{{ url_for('auth.login') }}">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" 
+                <label for="username">username</label>
+                <input type="text" id="username" name="username"
                        value="{{ username or '' }}"
-                       required autofocus {% if username %}class="has-value"{% endif %}
+                       required autofocus
                        autocomplete="username">
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required
+                <label for="password">password</label>
+                <input type="password" id="password" name="password"
+                       required
                        autocomplete="current-password">
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
-            </div>
+            <button type="submit" class="t-btn">[ AUTHENTICATE ]</button>
         </form>
 
-        <div class="login-help">
-            <p>Access restricted. Contact administrator if you need an account.</p>
-        </div>
+        <div class="t-auth-hint">// access restricted — admin only</div>
     </div>
 </div>
 {% endblock %}
