@@ -3,15 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found</title>
+    <title>404 – Page Not Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="text-center">
-    <div class="error-container">
-        <h1>404</h1>
-        <h2>Page Not Found</h2>
-        <p>The page you're looking for doesn't exist or has been moved.</p>
-        <a href="{{ url_for('index') }}" class="home-link">Go Home</a>
-    </div>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}" class="nav-logo">~/blog<span style="color:var(--amber)">$</span></a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('blog.index') }}">./articles</a></li>
+            <li><a href="{{ url_for('auth.login') }}">./login</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="t-error-page">
+            <span class="t-error-code">404</span>
+            <p class="t-error-msg">// page not found</p>
+            <div class="t-error-actions">
+                <a href="{{ url_for('index') }}" class="t-btn-outline">[ → HOME ]</a>
+                <a href="{{ url_for('blog.index') }}" class="t-btn-outline">[ → ARTICLES ]</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        [system] &copy; 2026 // running on Raspberry Pi 4B // Flask + SQLite // Cloudflare Tunnel
+    </footer>
 </body>
 </html>
