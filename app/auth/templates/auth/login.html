@@ -7,6 +7,16 @@
     <div class="t-auth-box">
         <div class="t-section-header">// AUTH_LOGIN</div>
 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" style="margin-bottom: 1.25rem;">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <form method="POST" action="{{ url_for('auth.login') }}">
             <div class="form-group">
                 <label for="username">username</label>
