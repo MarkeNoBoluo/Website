@@ -48,6 +48,7 @@ jobs:
       - name: Install dependencies
         working-directory: ${{ vars.DEPLOY_PATH }}
         run: |
+          python3 -m venv .venv
           source .venv/bin/activate
           pip install -r requirements.txt
 
