@@ -1,0 +1,71 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+# 确保同一时间只有一个部署在运行
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run tests
+        run: python -m pytest tests/ -v --tb=short
+        env:
+          SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+          DATABASE_URL: sqlite:///test.db
+          DEBUG: "false"
+          LOG_LEVEL: ERROR
+
+  deploy:
+    name: Deploy to Raspberry Pi
+    runs-on: self-hosted
+    needs: test  # 测试通过后才部署
+
+    steps:
+      - name: Pull latest code
+        working-directory: ${{ vars.DEPLOY_PATH }}
+        run: git pull origin main
+
+      - name: Install dependencies
+        working-directory: ${{ vars.DEPLOY_PATH }}
+        run: |
+          source .venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run database migrations
+        working-directory: ${{ vars.DEPLOY_PATH }}
+        run: |
+          source .venv/bin/activate
+          flask --app app db upgrade
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DEBUG: "false"
+          LOG_LEVEL: INFO
+
+      - name: Restart application
+        run: sudo systemctl restart blog
+
+      - name: Health check
+        run: |
+          sleep 3
+          curl -f http://localhost:8080/health || exit 1
