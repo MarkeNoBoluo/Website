@@ -45,6 +45,10 @@ jobs:
         working-directory: ${{ vars.DEPLOY_PATH }}
         run: git pull origin main
 
+      - name: Prepare directories
+        working-directory: ${{ vars.DEPLOY_PATH }}
+        run: mkdir -p logs instance
+
       - name: Install dependencies
         working-directory: ${{ vars.DEPLOY_PATH }}
         run: |
