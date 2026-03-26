@@ -1,28 +1,36 @@
 """Admin utility functions."""
 
 import re
+from datetime import date
 from app.models import Article
 
 
 def generate_slug(title: str) -> str:
     """Generate URL-friendly slug from title.
 
+    Chinese characters are transliterated to pinyin. The slug is prefixed
+    with the current date (YYYY-MM-DD) so URLs look like /blog/2026-03-24-title.
+
     Args:
         title: Article title
 
     Returns:
-        URL-safe slug string
+        URL-safe slug string, e.g. "2026-03-24-yuan-dui-xiang-xi-tong"
     """
-    # Convert to lowercase and replace spaces with hyphens
-    slug = title.lower().strip()
-    slug = re.sub(r"\s+", "-", slug)
+    from pypinyin import lazy_pinyin
+
+    # Transliterate Chinese characters to pinyin, then lowercase
+    pinyin_parts = lazy_pinyin(title)
+    slug = "-".join(pinyin_parts).lower().strip()
+
+    # Keep only alphanumeric and hyphens
     slug = re.sub(r"[^a-z0-9\-]", "", slug)
     slug = re.sub(r"-+", "-", slug)  # Collapse multiple hyphens
     slug = slug.strip("-")
 
-    # Handle empty slug
-    if not slug:
-        slug = "untitled"
+    # Prefix with today's date
+    today = date.today().strftime("%Y-%m-%d")
+    slug = f"{today}-{slug}" if slug else today
 
     # Check for duplicates and append suffix
     base_slug = slug
