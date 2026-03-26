@@ -97,6 +97,70 @@ def create_article():
     return render_template("admin/articles/create.html")
 
 
+@bp.route("/articles/import", methods=["GET", "POST"])
+@login_required
+@csrf_protected
+def import_articles():
+    """Bulk import Markdown files as published articles."""
+    if request.method == "POST":
+        files = request.files.getlist("files")
+        success, skipped = [], []
+        used_slugs = set()
+        MAX_FILE_SIZE = 512 * 1024  # 512 KB
+
+        for f in files:
+            filename = f.filename or ""
+            if not filename.lower().endswith(".md"):
+                skipped.append(f"{filename}（非 .md 文件）")
+                continue
+            try:
+                raw = f.read(MAX_FILE_SIZE + 1)
+                if len(raw) > MAX_FILE_SIZE:
+                    skipped.append(f"{filename}（文件超过 512KB）")
+                    continue
+                content = raw.decode("utf-8").strip()
+            except UnicodeDecodeError:
+                skipped.append(f"{filename}（编码错误）")
+                continue
+            if not content:
+                skipped.append(f"{filename}（文件为空）")
+                continue
+
+            title = filename[:-3].strip() or filename
+            slug = generate_slug(title)
+            base_slug = slug
+            counter = 1
+            while slug in used_slugs:
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            used_slugs.add(slug)
+
+            article = Article(
+                title=title,
+                content=content,
+                slug=slug,
+                status="published",
+            )
+            db.session.add(article)
+            success.append(title)
+
+        if success:
+            db.session.commit()
+            get_db_articles.cache_clear()
+            get_db_article_by_slug.cache_clear()
+
+        if success:
+            flash(f"成功导入 {len(success)} 篇：{'、'.join(success[:3])}{'...' if len(success) > 3 else ''}", "success")
+        if skipped:
+            flash(f"跳过 {len(skipped)} 个：{'、'.join(skipped)}", "warning")
+        if not success and not skipped:
+            flash("未选择任何文件", "error")
+
+        return redirect(url_for("admin.articles"))
+
+    return render_template("admin/articles/import.html")
+
+
 @bp.route("/articles/<int:id>/edit", methods=["GET", "POST"])
 @login_required
 @csrf_protected
