@@ -18,7 +18,7 @@
   <div class="boot-line ok"  style="animation-delay:0.7s">Starting Flask application server...</div>
   <div class="boot-line ok"  style="animation-delay:1.0s">Connecting to SQLite database...</div>
   {% if session.get('user_id') %}
-  <div class="boot-line ok"  style="animation-delay:1.3s">Session restored: {{ session.get('username') }}</div>
+  <div class="boot-line ok"  style="animation-delay:1.3s">Session restored: {{ current_user.username if current_user else 'admin' }}</div>
   {% else %}
   <div class="boot-line warn" style="animation-delay:1.3s">No admin session detected</div>
   {% endif %}
@@ -36,7 +36,7 @@
   <ul class="home-nav-links">
     <li><a href="{{ url_for('blog.index') }}">./articles</a></li>
     {% if session.get('user_id') %}
-      <li><span class="home-nav-user">[{{ session.get('username') }}]</span></li>
+      <li><span class="home-nav-user">[{{ current_user.username if current_user else 'admin' }}]</span></li>
       <li><a href="{{ url_for('auth.logout') }}">./logout</a></li>
     {% else %}
       <li><a href="{{ url_for('auth.login') }}">./login</a></li>

@@ -55,6 +55,11 @@ logs/
 Thumbs.db
 
 # Project specific
-blog.db  # SQLite database file
+instance/*.db  # SQLite database files
+*.db
 .planning/STATE.md.local  # Local state overrides (if any)
 posts-archive/  # Archived migrated posts
+
+# Cache directories
+.pytest_cache/
+.ruff_cache/

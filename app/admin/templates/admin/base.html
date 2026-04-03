@@ -50,7 +50,7 @@
                     {% block breadcrumbs %}{% endblock %}
                 </div>
                 <div class="user-info">
-                    <span>{{ session.get('username', 'User') }}</span>
+                    <span>{{ current_user.username if current_user else 'User' }}</span>
                     <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">退出</a>
                 </div>
             </div>

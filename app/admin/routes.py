@@ -1,6 +1,7 @@
 """Admin routes for article CRUD."""
 
 from flask import render_template, redirect, url_for, flash, request
+from sqlalchemy.exc import IntegrityError
 from . import bp
 from ..auth.utils import login_required
 from ..utils import csrf_protected
@@ -8,7 +9,6 @@ from ..extensions import db
 from ..models import Article
 from ..markdown import render_markdown
 from .utils import generate_slug
-from ..blog.utils import get_db_articles, get_db_article_by_slug
 
 
 @bp.route("/preview", methods=["POST"])
@@ -16,6 +16,9 @@ from ..blog.utils import get_db_articles, get_db_article_by_slug
 def preview():
     """Render markdown preview for admin editor."""
     content = request.form.get("content", "")
+    MAX_CONTENT_SIZE = 1 * 1024 * 1024
+    if len(content.encode("utf-8")) > MAX_CONTENT_SIZE:
+        return "Content too large (max 1MB)", 413
     if content:
         html = render_markdown(content)
         return html
@@ -85,13 +88,21 @@ def create_article():
             slug=slug,
             status=status if status in ("draft", "published") else "draft",
         )
-        db.session.add(article)
-        db.session.commit()
 
-        get_db_articles.cache_clear()
-        get_db_article_by_slug.cache_clear()
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                db.session.add(article)
+                db.session.commit()
+                break
+            except IntegrityError:
+                db.session.rollback()
+                if attempt == max_retries - 1:
+                    flash("文章创建失败（slug 冲突）", "error")
+                    return redirect(url_for("admin.articles"))
+                article.slug = generate_slug(title, suffix=attempt + 1)
 
-        flash(f'文章《{title}》创建成功', "success")
+        flash(f"文章《{title}》创建成功", "success")
         return redirect(url_for("admin.articles"))
 
     return render_template("admin/articles/create.html")
@@ -114,11 +125,13 @@ def import_articles():
                 skipped.append(f"{filename}（非 .md 文件）")
                 continue
             try:
-                raw = f.read(MAX_FILE_SIZE + 1)
-                if len(raw) > MAX_FILE_SIZE:
+                f.seek(0, 2)
+                size = f.tell()
+                f.seek(0)
+                if size > MAX_FILE_SIZE:
                     skipped.append(f"{filename}（文件超过 512KB）")
                     continue
-                content = raw.decode("utf-8").strip()
+                content = f.read(MAX_FILE_SIZE).decode("utf-8").strip()
             except UnicodeDecodeError:
                 skipped.append(f"{filename}（编码错误）")
                 continue
@@ -141,16 +154,27 @@ def import_articles():
                 slug=slug,
                 status="published",
             )
-            db.session.add(article)
-            success.append(title)
+
+            max_retries = 5
+            for attempt in range(max_retries):
+                try:
+                    db.session.add(article)
+                    db.session.commit()
+                    success.append(title)
+                    break
+                except IntegrityError:
+                    db.session.rollback()
+                    if attempt == max_retries - 1:
+                        skipped.append(f"{filename}（slug 冲突）")
+                    else:
+                        article.slug = generate_slug(title, suffix=attempt + 1)
+                        used_slugs.add(article.slug)
 
         if success:
-            db.session.commit()
-            get_db_articles.cache_clear()
-            get_db_article_by_slug.cache_clear()
-
-        if success:
-            flash(f"成功导入 {len(success)} 篇：{'、'.join(success[:3])}{'...' if len(success) > 3 else ''}", "success")
+            flash(
+                f"成功导入 {len(success)} 篇：{'、'.join(success[:3])}{'...' if len(success) > 3 else ''}",
+                "success",
+            )
         if skipped:
             flash(f"跳过 {len(skipped)} 个：{'、'.join(skipped)}", "warning")
         if not success and not skipped:
@@ -186,12 +210,19 @@ def edit_article(id):
         article.content = content
         article.status = status if status in ("draft", "published") else "draft"
 
-        db.session.commit()
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                db.session.commit()
+                break
+            except IntegrityError:
+                db.session.rollback()
+                if attempt == max_retries - 1:
+                    flash("文章更新失败（slug 冲突）", "error")
+                    return redirect(url_for("admin.articles"))
+                article.slug = generate_slug(title, suffix=attempt + 1)
 
-        get_db_articles.cache_clear()
-        get_db_article_by_slug.cache_clear()
-
-        flash(f'文章《{title}》更新成功', "success")
+        flash(f"文章《{title}》更新成功", "success")
         return redirect(url_for("admin.articles"))
 
     return render_template("admin/articles/edit.html", article=article)
@@ -208,10 +239,7 @@ def delete_article(id):
     db.session.delete(article)
     db.session.commit()
 
-    get_db_articles.cache_clear()
-    get_db_article_by_slug.cache_clear()
-
-    flash(f'文章《{title}》已删除', "success")
+    flash(f"文章《{title}》已删除", "success")
     return redirect(url_for("admin.articles"))
 
 
@@ -224,10 +252,7 @@ def publish_article(id):
     article.status = "published"
     db.session.commit()
 
-    get_db_articles.cache_clear()
-    get_db_article_by_slug.cache_clear()
-
-    flash(f'文章《{article.title}》已发布', "success")
+    flash(f"文章《{article.title}》已发布", "success")
     return redirect(url_for("admin.articles"))
 
 
@@ -240,10 +265,7 @@ def unpublish_article(id):
     article.status = "draft"
     db.session.commit()
 
-    get_db_articles.cache_clear()
-    get_db_article_by_slug.cache_clear()
-
-    flash(f'文章《{article.title}》已下线', "success")
+    flash(f"文章《{article.title}》已下线", "success")
     return redirect(url_for("admin.articles"))
 
 
@@ -257,8 +279,5 @@ def toggle_status(id):
     article.status = "published" if article.status == "draft" else "draft"
     db.session.commit()
 
-    get_db_articles.cache_clear()
-    get_db_article_by_slug.cache_clear()
-
-    flash(f'文章状态已切换为「{article.status}」', "success")
+    flash(f"文章状态已切换为「{article.status}」", "success")
     return redirect(url_for("admin.articles"))

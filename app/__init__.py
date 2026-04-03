@@ -41,6 +41,16 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    # Enable WAL mode for SQLite (must be after db.init_app)
+    with app.app_context():
+        from sqlalchemy import text
+
+        result = db.session.execute(text("PRAGMA journal_mode;"))
+        current_mode = result.scalar()
+        if current_mode != "wal":
+            db.session.execute(text("PRAGMA journal_mode=WAL"))
+            db.session.commit()
+
     # Configure session settings
     # Session expires on browser close (per user decision)
     app.config["SESSION_PERMANENT"] = False
@@ -82,7 +92,10 @@ def create_app(config_class=Config):
         """Health check endpoint returning application status."""
         from .utils import health_check
 
-        return jsonify(health_check())
+        result = health_check()
+        if result["status"] != "ok":
+            return jsonify(result), 503
+        return jsonify(result)
 
     @app.route("/config-test")
     def config_test():
@@ -123,6 +136,16 @@ def create_app(config_class=Config):
     @app.context_processor
     def inject_csrf_token():
         return {"csrf_token": generate_csrf_token()}
+
+    # Context processor to make current_user available in all templates
+    @app.context_processor
+    def inject_current_user():
+        from .models import User
+        from flask import session
+
+        user_id = session.get("user_id")
+        current_user = User.query.get(user_id) if user_id else None
+        return {"current_user": current_user}
 
     @app.errorhandler(404)
     def global_page_not_found(error):

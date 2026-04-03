@@ -13,7 +13,8 @@ ingress:
 
   # Rule 2: Health check endpoint
   - hostname: ${STATUS_SUBDOMAIN}.${DOMAIN}
-    service: http://localhost:8080/health
+    path: /health
+    service: http://localhost:8080
 
   # Rule 3: Default fallback (404)
   - service: http_status:404
