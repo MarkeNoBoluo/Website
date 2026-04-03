@@ -1,0 +1,65 @@
+<h2>CRT 特效在内容页面的范围</h2>
+<p class="subtitle">首页有扫描线、荧光闪烁、自定义光标。内容页面（博客文章、Todo）要保留多少？</p>
+
+<div class="split">
+  <div class="mockup" data-choice="full" onclick="toggleSelect(this)" style="cursor:pointer">
+    <div class="mockup-header">方案 A — 完整 CRT 效果</div>
+    <div class="mockup-body" style="font-family:'Courier New',monospace; background:#080808; color:#00ff41; padding:1rem; font-size:0.8rem; min-height:280px; position:relative; overflow:hidden">
+      <!-- Scanlines overlay -->
+      <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);pointer-events:none;z-index:10"></div>
+      <nav style="border-bottom:1px solid #003d10; padding:0.5rem 0; margin-bottom:1rem; display:flex; justify-content:space-between">
+        <span style="color:#00ff41; text-shadow:0 0 8px #00ff41">~/blog<span style="color:#ffb300">$</span></span>
+        <span style="color:#00a830; font-size:0.75rem">./articles &nbsp; ./matrix &nbsp; ./login</span>
+      </nav>
+      <div style="color:#ffb300; font-size:0.7rem; margin-bottom:0.5rem">// ARTICLE_DETAIL</div>
+      <div style="color:#00c832; font-size:1rem; margin-bottom:0.3rem; text-shadow:0 0 6px #00ff41">HELLO_WORLD</div>
+      <div style="color:#1a5c28; font-size:0.7rem; margin-bottom:0.8rem">[2026-03-15]</div>
+      <div style="color:#00a830; font-size:0.75rem; line-height:1.7">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id justo et lectus tincidunt faucibus. Sed efficitur magna at nisi gravida...<br><br>
+        <span style="color:#00c832">## Section Title</span><br>
+        More content here with <span style="background:#1a1a00; color:#ffb300">inline code</span> and details...
+      </div>
+      <div style="position:absolute; bottom:0.5rem; left:50%; transform:translateX(-50%); width:12px; height:16px; background:#00ff41; animation:blink 1s step-end infinite"></div>
+    </div>
+    <div style="padding:0.75rem; font-size:0.8rem; color:#aaa; background:#1a1a1a">
+      ✓ 扫描线 + 荧光闪烁<br>✓ 自定义绿色光标<br>✓ 全程 CRT 氛围<br>✗ 长文阅读略疲劳
+    </div>
+  </div>
+
+  <div class="mockup" data-choice="minimal" onclick="toggleSelect(this)" style="cursor:pointer">
+    <div class="mockup-header">方案 B — 轻量终端风格（推荐）</div>
+    <div class="mockup-body" style="font-family:'Courier New',monospace; background:#080808; color:#00ff41; padding:1rem; font-size:0.8rem; min-height:280px">
+      <nav style="border-bottom:1px solid #003d10; padding:0.5rem 0; margin-bottom:1rem; display:flex; justify-content:space-between">
+        <span style="color:#00ff41; text-shadow:0 0 8px #00ff41">~/blog<span style="color:#ffb300">$</span></span>
+        <span style="color:#00a830; font-size:0.75rem">./articles &nbsp; ./matrix &nbsp; ./login</span>
+      </nav>
+      <div style="color:#ffb300; font-size:0.7rem; margin-bottom:0.5rem">// ARTICLE_DETAIL</div>
+      <div style="color:#00c832; font-size:1rem; margin-bottom:0.3rem; text-shadow:0 0 6px #00ff41">HELLO_WORLD</div>
+      <div style="color:#1a5c28; font-size:0.7rem; margin-bottom:0.8rem">[2026-03-15]</div>
+      <div style="color:#cccccc; font-size:0.75rem; line-height:1.7">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id justo et lectus tincidunt faucibus. Sed efficitur magna at nisi gravida...<br><br>
+        <span style="color:#00c832">## Section Title</span><br>
+        More content here with <span style="background:#1a1a00; color:#ffb300">inline code</span> and details...
+      </div>
+    </div>
+    <div style="padding:0.75rem; font-size:0.8rem; color:#aaa; background:#1a1a1a">
+      ✓ 终端色调 + 字体<br>✓ 文章正文用浅色更易读<br>✓ 无扫描线（性能更好）<br>✗ 特效比首页少
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:1.5rem; padding:1rem; border:1px solid #333; border-radius:6px; background:#111">
+  <p style="color:#aaa; font-size:0.85rem; margin:0">点击方案选择，或直接在终端告诉我。两者的导航栏、配色完全相同，区别只在 CRT 视觉特效和文章正文颜色。</p>
+</div>
+
+<style>
+.mockup { cursor: pointer; transition: outline 0.15s; }
+.mockup.selected { outline: 2px solid #00ff41; }
+</style>
+<script>
+function toggleSelect(el) {
+  document.querySelectorAll('.mockup[data-choice]').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  if (window.recordChoice) recordChoice(el.dataset.choice, el.querySelector('.mockup-header').textContent.trim());
+}
+</script>

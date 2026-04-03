@@ -1,5 +1,7 @@
 """Application configuration."""
+
 import os
+from pathlib import Path
 
 
 class Config:
@@ -8,15 +10,21 @@ class Config:
     def __init__(self):
         """Initialize configuration from environment variables."""
         # Load from environment variables
-        self.SECRET_KEY = os.getenv('SECRET_KEY')
-        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
-        self.DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
-        self.LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+        self.SECRET_KEY = os.getenv("SECRET_KEY")
+        self.DEBUG = os.getenv("DEBUG", "false").lower() == "true"
+        self.LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
-        # Derived values
-        if self.SQLALCHEMY_DATABASE_URI and self.SQLALCHEMY_DATABASE_URI.startswith('sqlite:///'):
-            self.DATABASE_PATH = self.SQLALCHEMY_DATABASE_URI.replace('sqlite:///', '')
+        # Database URL with path resolution
+        db_url = os.getenv("DATABASE_URL", "sqlite:///instance/blog.db")
+        if db_url.startswith("sqlite:///"):
+            db_path = db_url.replace("sqlite:///", "")
+            if not os.path.isabs(db_path):
+                base_dir = Path(__file__).parent.parent
+                db_path = str(base_dir / db_path)
+            self.SQLALCHEMY_DATABASE_URI = f"sqlite:///{db_path}"
+            self.DATABASE_PATH = db_path
         else:
+            self.SQLALCHEMY_DATABASE_URI = db_url
             self.DATABASE_PATH = None
 
     @classmethod
@@ -30,26 +38,34 @@ class Config:
         if not secret_key:
             errors.append("SECRET_KEY is not set")
         elif len(secret_key) < 64:
-            errors.append(f"SECRET_KEY must be at least 64 characters (got {len(secret_key)})")
+            errors.append(
+                f"SECRET_KEY must be at least 64 characters (got {len(secret_key)})"
+            )
 
         # DATABASE_URL validation
         database_url = config.SQLALCHEMY_DATABASE_URI
         if not database_url:
             errors.append("DATABASE_URL is not set")
-        elif not database_url.startswith('sqlite:///'):
-            errors.append(f"DATABASE_URL must start with 'sqlite:///' (got '{database_url}')")
+        elif not database_url.startswith("sqlite:///"):
+            errors.append(
+                f"DATABASE_URL must start with 'sqlite:///' (got '{database_url}')"
+            )
 
         # DEBUG validation
-        debug_value = os.getenv('DEBUG', '').lower()
-        if debug_value not in ('true', 'false'):
+        debug_value = os.getenv("DEBUG", "").lower()
+        if debug_value not in ("true", "false"):
             errors.append(f"DEBUG must be 'true' or 'false' (got '{debug_value}')")
 
         # LOG_LEVEL validation
         log_level = config.LOG_LEVEL.upper()
-        valid_log_levels = {'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'}
+        valid_log_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
         if log_level not in valid_log_levels:
-            errors.append(f"LOG_LEVEL must be one of {sorted(valid_log_levels)} (got '{log_level}')")
+            errors.append(
+                f"LOG_LEVEL must be one of {sorted(valid_log_levels)} (got '{log_level}')"
+            )
 
         if errors:
-            error_msg = "Configuration errors:\n" + "\n".join(f"  - {error}" for error in errors)
+            error_msg = "Configuration errors:\n" + "\n".join(
+                f"  - {error}" for error in errors
+            )
             raise RuntimeError(error_msg)

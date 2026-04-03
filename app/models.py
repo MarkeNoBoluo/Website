@@ -1,7 +1,23 @@
 """SQLAlchemy data models for the application."""
 
+from enum import IntEnum
 from .extensions import db
 from datetime import datetime
+
+
+class Quadrant(IntEnum):
+    DO_FIRST = 1
+    SCHEDULE = 2
+    DELEGATE = 3
+    ELIMINATE = 4
+
+
+def _invalidate_article_cache(*args, **kwargs):
+    """Invalidate article cache after insert/update/delete."""
+    from .blog.utils import get_db_articles, get_db_article_by_slug
+
+    get_db_articles.cache_clear()
+    get_db_article_by_slug.cache_clear()
 
 
 class User(db.Model):
@@ -63,3 +79,10 @@ class Article(db.Model):
             "status IN ('draft', 'published')", name="check_article_status"
         ),
     )
+
+
+from sqlalchemy import event
+
+event.listen(Article, "after_insert", _invalidate_article_cache)
+event.listen(Article, "after_update", _invalidate_article_cache)
+event.listen(Article, "after_delete", _invalidate_article_cache)

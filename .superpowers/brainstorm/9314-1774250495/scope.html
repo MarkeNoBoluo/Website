@@ -1,0 +1,27 @@
+<h2>改造哪些页面？</h2>
+<p class="subtitle">首页已有完整的终端/CRT 主题。选择哪些页面也要改造成这个风格。</p>
+
+<div class="options" data-multiselect>
+  <div class="option" data-choice="public" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>公开页面（推荐）</h3>
+      <p>博客文章列表、文章详情、登录页、404/500 错误页、Todo 矩阵及表单</p>
+      <p style="margin-top:0.5rem; color:#888; font-size:0.85rem;">这些页面访客都能看到，与首页保持一致体验最重要</p>
+    </div>
+  </div>
+  <div class="option" data-choice="admin" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>管理后台页面</h3>
+      <p>文章管理、用户管理、Todo 管理、仪表盘</p>
+      <p style="margin-top:0.5rem; color:#888; font-size:0.85rem;">只有你自己使用，也可以保留当前白色 UI 风格（更易读）</p>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:2rem; padding:1rem; border:1px solid #333; border-radius:6px; background:#111">
+  <p style="color:#aaa; font-size:0.9rem; margin:0">
+    💡 可以同时选择 A 和 B，也可以只选 A。管理后台功能繁多（表格、表单、分页），终端风格在那里可读性会下降，所以默认只推荐改公开页面。
+  </p>
+</div>

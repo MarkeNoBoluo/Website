@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="referrer" content="no-referrer">
     <title>{% block title %}Blog{% endblock %}</title>
     <!-- Terminal fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +24,7 @@
             <li><a href="{{ url_for('blog.index') }}">./articles</a></li>
             {% if session.get('user_id') %}
                 <li><a href="{{ url_for('admin.index') }}">[admin]</a></li>
-                <li><span class="nav-user">[{{ session.get('username', 'admin') }}]</span></li>
+                <li><span class="nav-user">[{{ current_user.username if current_user else 'admin' }}]</span></li>
                 <li><a href="{{ url_for('auth.logout') }}">./logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('auth.login') }}">./login</a></li>

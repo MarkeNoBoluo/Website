@@ -94,8 +94,7 @@ def parse_article_file(filepath: Path) -> Optional[Dict]:
             "filepath": str(filepath),
         }
     except Exception as e:
-        # Log error and skip file
-        print(f"Error parsing {filepath}: {e}")
+        current_app.logger.error(f"Error parsing {filepath}: {e}")
         return None
 
 
